@@ -25,14 +25,14 @@ typedef struct SqList {
 }SqList;
 
 
-Status initList_Sq(SqList &L) {
+Status InitList_Sq(SqList &L) {
   // 构造一个空的线性表L
   L.elem = (ElemType *)malloc(LIST_INIT_SIZE * sizeof(ElemType));
   if (!L.elem) exit(OVERFLOW);    // 存储分配失败
   L.length = 0;                     // 空表长度为0
   L.listsize = LIST_INIT_SIZE;      // 初始存储容量
   return OK;
-}  // initList_Sq
+}  // InitList_Sq
 
 
 Status ListInsert_Sq(SqList &L, int i, ElemType e) {
@@ -82,8 +82,25 @@ int LocateElem_Sq(SqList &L, ElemType e,
   else return 0;
 } // LocateElem_Sq
 
-// 归并La和Lb得到新的顺序线性表Lc, Lc的元素也按非递减排列
-Status MergeList_Sq
+
+void MergeList_Sq(SqList La, SqList Lb, SqList &Lc) {
+  // 归并La和Lb得到新的顺序线性表Lc, Lc的元素也按非递减排列 - 线性复杂度
+  // 对Lc的空间和listsize分配和计算; 用指针修改元素
+  ElemType *pa, *pb, *pc;
+  // InitList_Sq(Lc);          // 初始化新线性表  why?这里根据len1,len2分配
+  Lc.listsize = Lc.length = La.length + Lb.length;
+  pc = Lc.elem = (ElemType*) malloc(Lc.listsize * sizeof(ElemType));   // 先分配内存才能指向这部分内存
+  if (!Lc.elem) exit(OVERFLOW);
+  pa = La.elem; pb = Lb.elem;
+  ElemType * pa_end, * pb_end;
+  pa_end = pa + La.length - 1;
+  pb_end = pb + Lb.length - 1;
+  while ((pa <= pa_end) && (pb <= pb_end)) {
+    *pc++ = (*pa <= *pb) ? *pa++ : *pb++;
+  }
+  while (pa <= pa_end) { *pc++ = *pa++; }     // 插入La剩余的元素
+  while (pb <= pb_end) { *pc++ = *pb++; }     // 插入Lb剩余的元素
+}  // MergeList_Sq
 
 
 
@@ -101,7 +118,7 @@ Status cmp(ElemType elem1, ElemType elem2) {
 
 int main() {
   SqList slst;
-  initList_Sq(slst);
+  InitList_Sq(slst);
   ListInsert_Sq(slst, 1, 3);
   ListInsert_Sq(slst, 2, 2);
   ListInsert_Sq(slst, 3, 6);
@@ -115,6 +132,26 @@ int main() {
 
   ListInsert_Sq(slst, 2, 7);
   printf("local=%d\n", LocateElem_Sq(slst, 11, cmp));
+
+  SqList Lb, Lc, Ld;
+  InitList_Sq(Lb); InitList_Sq(Lc);
+  ListInsert_Sq(Lb, 1, 3);
+  ListInsert_Sq(Lb, 2, 5);
+  ListInsert_Sq(Lb, 3, 8);
+  ListInsert_Sq(Lb, 4, 11);
+
+  ListInsert_Sq(Lc, 1, 2);
+  ListInsert_Sq(Lc, 2, 6);
+  ListInsert_Sq(Lc, 3, 8);
+  ListInsert_Sq(Lc, 4, 9);
+  ListInsert_Sq(Lc, 5, 11);
+  ListInsert_Sq(Lc, 6, 15);
+  ListInsert_Sq(Lc, 7, 20);
   
+  
+  MergeList_Sq(Lb, Lc, Ld);
+  ListPrint_Sq(Lb);
+  ListPrint_Sq(Lc);
+  ListPrint_Sq(Ld);
   return 0;
 }
