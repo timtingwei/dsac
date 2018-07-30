@@ -70,9 +70,20 @@ Status ListDelete_Sq(SqList &L, int i, ElemType &e) {
   return OK;
 }  // ListDelete_Sq
 
-// 在顺序线性表L中查找第1一个值与e满足compare()的元素序位
+
+int LocateElem_Sq(SqList &L, ElemType e,
+                  Status (* compare)(ElemType, ElemType)) {
+  // 在顺序线性表L中查找第1个值与e满足compare()的元素序位
+  // 若找到, 则返回其在L中的位序, 否则返回0
+  int i = 1;                 // i的初值是第1个元素的位序号
+  ElemType * p = L.elem;     // p的初值位第一个元素的储存位置
+  while (i <= L.length && !(* compare)(*p++, e)) ++i;
+  if (i <= L.length) return i;
+  else return 0;
+} // LocateElem_Sq
 
 // 归并La和Lb得到新的顺序线性表Lc, Lc的元素也按非递减排列
+Status MergeList_Sq
 
 
 
@@ -81,6 +92,11 @@ Status ListPrint_Sq(SqList &L) {
   for (int i = 0; i < L.length; i++) printf("%d ", L.elem[i]);
   printf("\n");
   return OK;
+}
+
+Status cmp(ElemType elem1, ElemType elem2) {
+  // 关系函数, 满足两个元素相等
+  return elem1 == elem2;
 }
 
 int main() {
@@ -96,5 +112,9 @@ int main() {
   ElemType e;
   ListDelete_Sq(slst, 2, e);
   ListPrint_Sq(slst);
+
+  ListInsert_Sq(slst, 2, 7);
+  printf("local=%d\n", LocateElem_Sq(slst, 11, cmp));
+  
   return 0;
 }
