@@ -43,13 +43,26 @@ int Malloc_SLL(SLinkList space) {
   return i;
 }  // Malloc_SLL
 
-// 静态链表L的长度(自己写, 参考大话数据结构)
+/*
+// 静态链表L的长度(自己写)
 int ListLength(SLinkList L) {
   int i, l;
   i = L[MAXSIZE-1].cur;
   if (!i) return i;         // 首个有数据的元素下标位0, 长度为0
   l = 1;
   while (L[i].cur) {
+    i = L[i].cur;
+    l++;
+  }
+  return l;
+}
+*/
+
+// 静态链表L的长度(参考大话数据结构中的实现版本)
+int ListLength(SLinkList L) {
+  int i, l;
+  i = L[MAXSIZE-1].cur;
+  while (i) {             // 首个有数据的元素下标位0, 长度为0
     i = L[i].cur;
     l++;
   }
