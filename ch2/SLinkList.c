@@ -57,7 +57,7 @@ int ListLength(SLinkList L) {
 }
 
 // 在静态链表L的第i个元素之前插入新的数据元素e
-Status InsertList_SL(SLinkList L, int i, ElemType e) {
+Status ListInsert_SL(SLinkList L, int i, ElemType e) {
   // 首个元素cur改变成第一个空闲位置下标
   // 最后一个元素cur改成第一个有数据位置的下标
   // 需要手动模拟动态链表结构的储存空间和分配
@@ -73,7 +73,27 @@ Status InsertList_SL(SLinkList L, int i, ElemType e) {
   L[j].cur = L[k].cur;             // 新元素的下一位置, 是i之前元素的下一位置
   L[k].cur = j;                    // 把新元素的下标作为i之前元素的cur
   return OK;
-}  // InsertList_SL
+}  // ListInsert_SL
+
+// 将下标为k的空闲结点回收到备用链表
+void Free_SSL(SLinkList space, int k) {
+  space[k].cur = space[0].cur;     // 空闲位置换做k来指向, 作为第二空闲位置
+  space[0].cur = k;                // 目前首个空闲位置下标为k
+  // why? 不对数据清零?
+}
+
+// 删除在静态链表L中的第i个数据元素e
+Status ListDelete_SL(SLinkList L, int i) {
+  int k, j;  // k指向删除元素的前一个元素, j用来计数, 也作用删除元素下标
+  k = MAXSIZE - 1;                 // k是头结点
+  for (j = 1; j <= i-1; j++) {
+    k = L[k].cur;                  // 将k移动到第i元素的前一个元素
+  }
+  j = L[k].cur;                    // j指向被删除的元素
+  L[k].cur = L[j].cur;
+  Free_SSL(L, j);
+  return OK;
+}
 
 
 // 在静态单链线性表S中查找第一个值为e的元素
@@ -84,14 +104,26 @@ int LocateElem_SL(SLinkList S, ElemType e) {
   // return i;
 }  // LocateElem_SL
 
+void ListPrint_SL(SLinkList S) {
+  int k, i;
+  k = MAXSIZE - 1;
+  for (i = 0; i < ListLength(S); i++) {
+    k = S[k].cur;
+    printf("%d ", S[k].data);
+  }
+  printf("\n");
+}
+
 int main() {
   SLinkList S;
   InitSpace_SL(S);
+  ListInsert_SL(S, 1, 7);
+  ListInsert_SL(S, 1, 2);
+  ListInsert_SL(S, 2, 3);
+  ListPrint_SL(S);
   printf("length=%d\n", ListLength(S));
-  InsertList_SL(S, 1, 5);
-  
-  InsertList_SL(S, 1, 2);
-  InsertList_SL(S, 2, 5);
+  ListDelete_SL(S, 1);
   printf("length=%d\n", ListLength(S));
+  ListPrint_SL(S);
   return 0;
 }
