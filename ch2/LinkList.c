@@ -106,6 +106,22 @@ Status CreateListTail_L(LinkList *L, int n) {
   return OK;
 }
 
+// 归并两个有序链表, 成为一个有序链表
+void MergeList_L(LinkList La, LinkList Lb, LinkList *Lc) {
+  LinkList pa, pb, pc;
+  pa = La->next; pb = Lb->next;   // pa是La头指针指向的结点, 首个结点
+  (*Lc) = pc = (LinkList) malloc (sizeof(LNode));    // 为Lc分配空间, pc头结点
+  while (pa && pb) {
+    if (pa->data <= pb->data) {
+      pc->next = pa; pc = pa; pa = pa->next;    // pc的下个结点为pa, ..pc作为
+    } else {
+      pc->next = pb; pc = pb; pb = pb->next;    // ..尾结, pa移动到下个结点;同理
+    }
+  }
+  pc->next = (pa) ? pa:pb;   // pa先空指向pb, 否则指向pa; 指针域都空, 指向NULL
+}
+
+// 工具: 打印一个链表, debug用
 void ListPrint_L(LinkList L) {
   int j;
   LinkList p;
@@ -132,11 +148,19 @@ int main() {
   
 
   CreateListHead_L(&L, 8);
-  ListPrint_L(L);
+  // ListPrint_L(L);
   CreateListTail_L(&L, 8);
-  ListPrint_L(L);
+  // ListPrint_L(L);
 
-  GetElem_L(L, 2, &e);
-  printf("%d\n", e);
+  LinkList La, Lb, Lc;
+  CreateListTail_L(&La, 0);
+  ListPrint_L(La);
+  CreateListHead_L(&Lb, 1);
+  ListPrint_L(Lb);
+  MergeList_L(La, Lb, &Lc);
+  
+  
+  ListPrint_L(Lc);
+
   return 0;
 }
