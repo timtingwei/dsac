@@ -58,9 +58,11 @@ int ListLength(SLinkList L) {
 }
 */
 
+// /*
 // 静态链表L的长度(参考大话数据结构中的实现版本)
 int ListLength(SLinkList L) {
   int i, l;
+  l = 0;
   i = L[MAXSIZE-1].cur;
   while (i) {             // 首个有数据的元素下标位0, 长度为0
     i = L[i].cur;
@@ -68,6 +70,7 @@ int ListLength(SLinkList L) {
   }
   return l;
 }
+// */
 
 // 在静态链表L的第i个元素之前插入新的数据元素e
 Status ListInsert_SL(SLinkList L, int i, ElemType e) {
@@ -109,13 +112,88 @@ Status ListDelete_SL(SLinkList L, int i) {
 }
 
 
-// 在静态单链线性表S中查找第一个值为e的元素
-int LocateElem_SL(SLinkList S, ElemType e) {
+// 在静态单链线性表S中查找第一个值为e的元素(参考数据结构, S[0]是头结点)
+int LocateElem_SLT(SLinkList S, ElemType e) {
   int i = S[0].cur;              // 表中第一个结点, S[0]是头结点
   while (i && S[i].data != e) i = S[i].cur;  // 移动游标
   return i;    // i=0, return 0; i存在, 返回此时i
   // return i;
 }  // LocateElem_SL
+
+/*
+// 静态链表的查找
+// 在静态链表S中查重第一个值为e的元素, 返回在链表中第几个元素
+int LocateElem_SL(SLinkList S, ElemType e) {
+  int k, j;
+  k = S[MAXSIZE - 1].cur;           // 头结点指向的索引
+  j = 1;
+  while (k && S[k].data != e) { k = S[k].cur; j++;}
+  return j;
+}
+*/
+
+// 在静态链表S中查重第一个值为e的元素, 返回在链表中索引
+int LocateElem_SL(SLinkList S, ElemType e) {
+  int k;
+  k = S[MAXSIZE - 1].cur;           // 头结点指向的索引
+  while (k && S[k].data != e) { k = S[k].cur;}
+  return k;
+}
+
+// 静态链表的整表添加
+void CreateListTail_SL(SLinkList S, int n) {
+  // 随机产生n个元素的值, 建立带头结点的静态链表
+  // SLinkList L;
+  int i, r, k;
+  srand(time(0));
+  InitSpace_SL(S);
+  S[MAXSIZE-1].cur = 1;
+  r = S[0].cur;     // r指向首个空闲位置
+  for (i = 0; i < n; i++) {
+    k = Malloc_SLL(S);
+    S[k].data = rand()%100 + 1;    // 随机生成100以内的数字
+    S[r].cur = k;
+    r = k;
+  }
+  S[r].cur = 0;
+}
+
+// 静态链表的整表删除
+Status ClearList_SL(SLinkList S) {
+  int k, j;
+  k = S[MAXSIZE - 1].cur;
+  while (k) {
+    j = S[k].cur;
+    Free_SSL(S, k);
+    k = j;
+  }
+  S[MAXSIZE - 1].cur = 0;     // 头结点的指针域为0
+  return OK;
+}
+
+// 两个有序静态链表的归并(仍旧存在点问题, 《数据结构》p33问题来解决)
+Status MergeList_SL(SLinkList S1, SLinkList S2, SLinkList S3) {
+  // 两个指针都指向首个元素结点
+  int p, q, k;
+  p = S1[MAXSIZE - 1].cur;
+  q = S2[MAXSIZE - 1].cur;
+  // 初始化S3
+  InitSpace_SL(S3);
+  S3[MAXSIZE-1].cur = 0;         // 头结点指针域为0
+  k = S3[MAXSIZE-1].cur;         // k是s3首个元素的下标
+  printf("p=%d, q=%d\n", p, q);
+  while (p && q) {
+    if (S1[p].data <= S2[q].data) {
+      S3[k].data = S1[p].data; k = S3[k].cur; p = S1[p].cur;
+    } else {
+      S3[k].data = S2[q].data; k = S3[k].cur; q = S2[q].cur;
+    }
+  }
+  if (p) S3[k].cur = p;
+  if (q) S3[k].cur = q;
+  // 但这里存在一个问题, s1,s2, s3各自的空间独立, 貌似无法简单这样的链接
+  return OK;
+}
 
 void ListPrint_SL(SLinkList S) {
   int k, i;
@@ -133,10 +211,23 @@ int main() {
   ListInsert_SL(S, 1, 7);
   ListInsert_SL(S, 1, 2);
   ListInsert_SL(S, 2, 3);
+  printf("locate(3)=%d\n", LocateElem_SL(S, 3));
+  printf("S[3]=%d\n", S[3].data);
   ListPrint_SL(S);
   printf("length=%d\n", ListLength(S));
   ListDelete_SL(S, 1);
   printf("length=%d\n", ListLength(S));
   ListPrint_SL(S);
+
+  SLinkList S2;
+  CreateListTail_SL(S2, 5);
+  ListPrint_SL(S2);
+
+  // ClearList_SL(S2);
+  // ListPrint_SL(S2);
+
+  SLinkList S3;
+  MergeList_SL(S, S2, S3);
+  ListPrint_SL(S3);
   return 0;
 }
