@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>    // 用于头插法生成随机数
 
 
 #define TRUE 1
@@ -21,11 +22,11 @@ typedef struct LNode {
 }LNode, * LinkList;   // why?  int a[] ==> int* a, LinkList储存LNode结点
 
 // 单链表的读取
-Status GetElem_L(LinkList *L, int i, ElemType *e) {
+Status GetElem_L(LinkList L, int i, ElemType *e) {
   // 定义头指针从链表头部开始, j计数1
   int j;
   LinkList p;
-  p = (*L)->next; j = 1;    // 结点p指向链表L的第一个结点
+  p = L->next; j = 1;    // 结点p指向链表L的第一个结点
   while (p && j < i) {   // why? j与i的关系
     p = p->next; j++;    // 当j<i时, 遍历链表, 让p向后移动不断指向下一结点
   }
@@ -63,21 +64,52 @@ Status ListDelete_L(LinkList *L, int i, ElemType *e) {
   if (!(p->next) || j > i) return ERROR;         // 不存在第i个结点
   q = p->next;                           // q指向要被删除的结点
   p->next = q->next;                     // p下一结点赋值为q的下一结点
-  // p->next = p->next->next;
+  // p->next = p->next->next;            // 需要手动释放q, 这样会丢失q
   *e = q->data;                          // 将e所指向的对象更新成被删除的数据
   free(q);                               // 让系统回收结点q, 释放释放
   return OK;
 }
 
-Status CreateList_L(LinkList *L) {
-  // ..
+// 头插法, 建立带头结点的单链线性表  (类似于插队)
+Status CreateListHead_L(LinkList *L, int n) {
+  // 声明一个结点p和计数器i
+  LinkList p; int i;
+  srand(time(0));
+  // 初始化一个空列表L
+  *L = (LinkList) malloc (sizeof(LNode));
+  // 让L的头结点的指针指向NULL
+  (*L)->next = NULL;
+  for (i = 0; i < n; i++) {
+    p = (LinkList) malloc (sizeof(LNode));   // 生成一点新结点赋值给p
+    p -> data = rand()%100 + 1;              // 随机生成100以内数字赋值给p的数据域
+    p->next = (*L)->next;
+    (*L)->next = p;                            // 将p插入到头结点与前一结点之间
+  }
+  return OK;
+}  // CreateListHead_L
+
+// 尾插法 (正常的排队逻辑)
+Status CreateListTail_L(LinkList *L, int n) {
+  // 声明两个结点, 计数容器i
+  LinkList p, r; int i;                  // r作为移动结点, p作为移动时生成结点
+  srand(time(0));
+  *L = (LinkList) malloc(sizeof(LNode));
+  r = *L;
+  for (int i = 0; i < n; i++) {
+    p = (LinkList) malloc (sizeof(LNode));   // 生成一个新结点
+    p->data = rand()%100 + 1;
+    r->next = p;
+    r = p;                                   // r作为此时的尾结点
+    // r->next = NULL;        // 循环结束后写
+  }
+  r->next = NULL;             // 循环结束后, 尾结点的指针域指向NULL
   return OK;
 }
 
-void ListPrint_L(LinkList *L) {
+void ListPrint_L(LinkList L) {
   int j;
   LinkList p;
-  p = *L; j = 0;
+  p = L->next; j = 0;
   while (p) {
     printf("%d ", p->data);
     p = p -> next; j++;
@@ -94,12 +126,17 @@ int main() {
   // L -> data = 5;
   // L -> next-> data = 2;
   // L -> next -> next -> data = -10;
-  ListInsert_L(&L, 1, 8);
-  ListInsert_L(&L, 1, 1);
-  ListInsert_L(&L, 1, 9);
-  ListPrint_L(&L);
+  // ListInsert_L(&L, 1, 8);
+  // ListInsert_L(&L, 1, 1);
+  // ListInsert_L(&L, 1, 9);
+  
 
-  // GetElem_L(&L, 1, e);
-  // printf("%d\n", e);
+  CreateListHead_L(&L, 8);
+  ListPrint_L(L);
+  CreateListTail_L(&L, 8);
+  ListPrint_L(L);
+
+  GetElem_L(L, 2, &e);
+  printf("%d\n", e);
   return 0;
 }
