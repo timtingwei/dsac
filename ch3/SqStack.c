@@ -30,6 +30,12 @@ Status InitStack(SqStack * S) {
   return OK;
 }  // InitStack
 
+// 若栈S为空栈, 则返回TRUE, 否则返回FALSE
+Status StackEmpty(SqStack S) {
+  if (S.top == S.base) return TRUE;
+  return FALSE;
+}  // StackEmpty
+
 // 若栈不空, 则用e返回S的栈顶元素, 并返回OK; 否则返回ERROR
 Status GetTop(SqStack S, SElemType *e) {
   if (S.top == S.base) return ERROR;     // 栈空
