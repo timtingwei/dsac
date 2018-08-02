@@ -54,6 +54,7 @@ void PrintStack_bottom(SqStack S) {
   printf("\n");
 }
 
+
 /*
 bug1: 无法结束外层主循环,
 bug2: 对于一个栈, 没分清楚ClearStack() 和 InitStack()的区别
@@ -86,13 +87,21 @@ void lineEdit() {
 // ClearStack() 和 DestroyStack(), 定义和声明在Stack头文件中
 // improve: 三个并列的if, 改写成switch
 void lineEdit() {
-  SqStack S, int ch;
+  SqStack S; int ch, e;
   InitStack(&S);
   ch = getchar();
   while (ch != EOF) {
     while (ch != EOF && ch != '\r' && ch != '\n') {
-      switch ch:
-      case '#':
+      switch (ch) {
+      case '#': Pop(&S, &e); break;
+      case '@': ClearStack(&S); break;
+      default:  Push(&S, ch); break;
+      }
+      ch = getchar();          // 在内层循环结束时, 读取下一个字符
     }
+    PrintStack_bottom(S);      // O(n)
+    ClearStack(&S);            // 将当前栈清空;
+    if (ch != EOF) ch = getchar();
   }
-}
+  DestroyStack(&S);              // 销毁这个函数中创建的栈
+}  // lineEdit
