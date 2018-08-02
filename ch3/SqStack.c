@@ -67,6 +67,15 @@ Status Pop(SqStack *S, SElemType *e) {
   return OK;
 }  // Pop
 
+// 销毁栈S, S不再存在
+Status DestroyStack(SqStack *S) {
+  free(S->base);
+  S->base = NULL;        // 清空指针
+  S->top = NULL;
+  S->stacksize = 0;
+  return OK;
+}
+
 
 
 
