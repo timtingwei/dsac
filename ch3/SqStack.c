@@ -70,4 +70,3 @@ Status Pop(SqStack *S, SElemType *e) {
 
 
 
-

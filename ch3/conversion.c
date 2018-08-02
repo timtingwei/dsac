@@ -2,7 +2,6 @@
 // 数制转换, conversion
 // a / b, a % b; 求余结果入栈, 先进后出原则, 先别计算的在最后被打印输出
 #include <stdio.h>
-#include "SqStack.c"
 
 void conversion() {
   int a; SqStack S;
