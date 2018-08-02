@@ -111,3 +111,18 @@ free(p);
 > * 4, 栈的初始化(init)
 > * 5, 判空(empty)
 
+### 3.2 栈的应用举例
+
+1, 数制转换, conversion(求余结果入栈, 先进后出原则, 先被计算的在最后被打印输出)
+2, 括号匹配的检验, brackets_mactch(用栈表示期待的迫切程度,)
+3, 行编辑程序, LineEdit(栈作为输入缓冲区)
+
+```cpp
+// 行编辑程序的记录
+// debug1: 在外循环进入前, 先getchar一个字符, 如果ch==EOF,
+// 对于外层循环结束, 在内存循环结束后, 同样getchar()一次;
+// debug2: 在声明一个stack后InitStack(), 如果只是清空stack缓存, ClearStack();
+// debug3: 如果这个栈的函数结束后不再有作用, DestroyStack()
+// ClearStack() 和 DestroyStack(), 定义和声明在Stack头文件中
+// improve: 三个并列的if, 改写成switch
+```
