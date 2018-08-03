@@ -20,6 +20,14 @@ typedef int Status;      // Status是函数返回的值
 #define MAXSTRLEN 255       // 用户可以在255以内定义最大串长
 typedef unsigned char SString[MAXSTRLEN];     // 字符数组
 
+// 生成一个值等于ch的串T
+Status StrAssign(SString *T, char ch) {
+  // T = (char*) malloc (sizeof(char) * MAXSTRLEN);
+  // if (!T) exit(OVERFLOW);
+  (*T)[0] = 1; (*T)[1] = ch;
+  return OK;
+}
+
 // 用T返回由S1, S2连接而成的新串, 若未截断, 返回TRUE, 否则返回FALSE
 Status Concat(SString *T, SString S1, SString S2) {
   int uncut; int i;                      // 截断标记, 循环计数
@@ -70,7 +78,23 @@ int Index(String S, String T, int pos) {
 }  // Index
 */
 
+void PrintString(SString S) {
+  for (int i = 1; i <= S[0]; i++) {
+    printf("%d ", S[i]);
+  }
+  printf("\n");
+}
+
 int main() {
-  SString str = "dsds";
+  // SString str = "dsds";
+  SString str, T;
+  StrAssign(&str, 'a');
+  Concat(&T, str, str);
+  PrintString(T);
+  StrAssign(&str, 'c');
+  Concat(&T, T, str);
+  Concat(&T, T, str);
+  Concat(&T, T, str);
+  PrintString(T);
   return 0;
 }
