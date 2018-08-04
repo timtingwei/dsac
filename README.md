@@ -274,7 +274,7 @@ if (pos < 1 || pos > S[0] || len < 0 || len > S[0] - pos + 1)
 > * 插入T
 > * 改变S的长度
 
-优点: 既有顺序存储结构的特点, 处理方便, 操作中对串长又没有任何限制.
+堆分配存储优点: 既有顺序存储结构的特点, 处理方便, 操作中对串长又没有任何限制.
 
 StrAssign操作:(生成一个其值等于串常量char的串T)
 > * 判断常量串是否为为空串
@@ -283,5 +283,54 @@ StrAssign操作:(生成一个其值等于串常量char的串T)
 > * 别忘记为T的存储区分配空间,
 > * 将常量串赋值给T
 > * 别忘了赋值T的长度
+
+
+**实现其他操作:**
+> * 生成一个其值等于串常量char的串T
+> * 求串长
+> * 比较两个串, S>T, S<T, S=T
+> * 清空串,(别忘记释放空间)
+> * 连接两个串成一个新串,(为新串释放, 分配空间)
+> * 求子串(注意pos代表是第几个元素, 索引是pos-1, 要判断pos,len是否合法, 释放原本存储空间, 判断空串, 为非空串分配空间, 赋值和赋长度)
+
+
+几个要注意的点:
+
+**1, 求子串操作中:**
+
+<span style="color:red">注意pos代表是第几个元素, 索引是pos-1, 要判断pos,len是否合法, 释放原本存储空间, 判断空串, 为非空串分配空间, 赋值和赋长度</span>
+
+
+**2, 初始化串**
+<span style="color:red">在调用时, 需要用StrAssign初始化一个HString, 不然在Concat()和SubString()函数中, free()会抛出error </span>
+日志如下:
+```sh
+a.out(86530,0x7fffb5570380) malloc: *** error for object 0x117077520: pointer being freed was not allocated
+*** set a breakpoint in malloc_error_break to debug
+Abort trap: 6
+```
+
+用gdb调试一下:
+```cpp
+(gdb) b Concat
+Breakpoint 1 at 0x100000b3b: file ./HString.c, line 79.
+(gdb) r
+Starting program: /Users/htwt/timspace/dsac/ch4/a.out 
+[New Thread 0xe03 of process 86462]
+warning: unhandled dyld version (15)
+len=5
+cmp=2
+
+Thread 2 hit Breakpoint 1, Concat (T=0x7ffeefbff8f0, S1=..., S2=...) at ./HString.c:79
+79	  if ((*T).ch) { free((*T).ch); T->ch = NULL;}         // why not? ch=NULL?
+(gdb) watch T->ch
+Hardware watchpoint 2: T->ch
+(gdb) n
+a.out(86462,0x7fffb5570380) malloc: *** error for object 0x100003248: pointer being freed was not allocated
+*** set a breakpoint in malloc_error_break to debug
+
+Thread 2 received signal SIGABRT, Aborted.
+0x00007fff7ceb1b6e in ?? ()
+```
 
 #### 4.2.3 串的块链存储表示
