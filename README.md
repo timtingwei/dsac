@@ -229,7 +229,7 @@ typedef struct {
 
 > * 1, 实现定位函数Index(S, T, pos), 依赖判等, 求串长, 求子串等操作 - 算法4.1
 
-### 4.2
+### 4.2 串的表示和实现
 
 串的机内三种表示方法: 定长顺序存储表示, 堆分配存储表示, 串的块链存储表示
 
@@ -347,3 +347,68 @@ Thread 2 received signal SIGABRT, Aborted.
 链块存储的优缺点:
 > * 优点: 连接操作方便;
 > * 缺点: 不如前两种灵活, 存储量大, 操作复杂
+
+
+
+
+### 4.3 串的模式匹配算法
+
+#### 4.3.1 朴素的模式匹配算法
+Index.c - 算法4.5
+
+我自己实现的版本:
+```cpp
+// 返回子串T在主串S中第pos个字符之后的位置
+int Index(SString S, SString T, int pos) {
+  // 1<=pos<=S.length-T.length+1
+  if (pos < 1 || pos > S[0]-T[0]+1) return ERROR;
+  int i, j;
+  for (i = pos; i <= S[0] - T[0]+1; i++) {
+    int ok = 1;
+    for (j = 0; j <= T[0]-1; j++) {
+      if (S[i+j] != T[j+1]) { ok = 0; break; }
+    }
+    if (ok) return i;
+  }
+  return 0;
+}
+```
+
+标准的朴素匹配版本:
+<span style="color:red">注意指针的抽象的运用..(**回溯法**)</span>
+```cpp
+// 标准的朴素匹配 O(n) = (n-m+1)*m;
+int Index(SString S, SString T, int pos) {
+  // 1<=pos<=S.length-T.length+1
+  // T非空, 1 <= pos <= StrLength(S)
+  int i, j;
+  i = pos, j = 1;
+  while (i <= S[0] && j <= T[0]) {
+    if (S[i] == T[j]) {
+      i++; j++;
+    } else {
+      i = i-j+2; j = 1;          // i退回到下一位, j退回到首位 i = i-(j-1)+1=i-j+2;
+    }
+  }
+  if (j > T[0]) {                // T被匹配完全才退出的循环
+    return i-T[0];               // why? 完全匹配后, i = ans+Strlen(T);
+  }
+  return 0;
+}
+```
+
+
+朴素版本效率低的例子:
+```
+S = "0000000000000000000000000000000000000001", n个0
+T = "00000000001", m个0
+```
+前n-m-1次判断每次都需要判断m次, 最后一次匹配成功
+
+
+01串: 
+> * 在计算机图形显示中, 把画面表示成一个01串, 一页书就是几百万个0和1组成的串.
+> * 二进制计算机处理的都是01串
+> * 一个字符ascii可以看成8个二进位的01串, 汉字也被作为01串
+
+#### 4.3.2 KMP模式匹配算法
