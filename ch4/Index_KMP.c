@@ -44,6 +44,25 @@ void get_next(SString T, int *next) {
   }
 }
 
+// 改良get_next
+void get_nextval(SString T, int *nextval) {
+  int i, j;
+  i = 1; j = 0;
+  nextval[1] = 0;
+  while (i < T[0]) {
+    if (j == 0 || T[i] == T[j]) {   // T[i]表示后缀的单个字符
+      ++i;                          // T[j]表示前缀单个字符
+      ++j;
+      if (T[i] != T[j])
+        nextval[i] = j;
+      if (T[i] == T[j])
+        nextval[i] = nextval[j];   // 如果与前缀相同, 将前缀的nextval赋值给他
+    } else {
+      j = nextval[j];       // 若字符不相同, 则j值回溯
+    }
+  }
+}
+
 // 返回子串T在主串S中第pos个字符之后的位置, 若不存在, 函数值为0
 // KMP匹配
 int Index_KMP(SString S, SString T, int pos) {
@@ -52,7 +71,7 @@ int Index_KMP(SString S, SString T, int pos) {
   int i, j;
   i = pos, j = 1;
   int next[255];        // 定义一组next数组
-  get_next(T, next);    // 对串T进行分析, 得到next数组
+  get_nextval(T, next);    // 对串T进行分析, 得到next数组
   while (i <= S[0] && j <= T[0]) {
     if (j == 0 || S[i] == T[j]) {
       i++; j++;
