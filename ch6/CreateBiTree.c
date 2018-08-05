@@ -24,7 +24,7 @@ typedef struct BiTNode {
 } BiTNode, *BiTree;
 
 
-// 中序遍历建立二叉树
+// 前序遍历建立二叉树
 void CreateBiTree(BiTree *T) {
   TElemType ch;
   scanf("%c", &ch);
@@ -33,9 +33,9 @@ void CreateBiTree(BiTree *T) {
   } else {                           /* why?????? */
     *T = (BiTree) malloc (sizeof(BiTNode));
     if (!*T) exit(OVERFLOW);
-    CreateBiTree(&((*T)->lchild));   /* 构造左子树 */
     (*T) -> data = ch;
     printf("data=%c\n", (*T)->data);
+    CreateBiTree(&((*T)->lchild));   /* 构造左子树 */
     CreateBiTree(&((*T)->rchild));   /* 构造右子树 */
   }
 }
