@@ -30,12 +30,12 @@ void CreateBiTree(BiTree *T) {
   scanf("%c", &ch);
   if (ch == '#') {
     *T = NULL;
-  } else {
+  } else {                           /* why?????? */
     *T = (BiTree) malloc (sizeof(BiTNode));
     if (!*T) exit(OVERFLOW);
+    CreateBiTree(&((*T)->lchild));   /* 构造左子树 */
     (*T) -> data = ch;
     printf("data=%c\n", (*T)->data);
-    CreateBiTree(&((*T)->lchild));   /* 构造左子树 */
     CreateBiTree(&((*T)->rchild));   /* 构造右子树 */
   }
 }
