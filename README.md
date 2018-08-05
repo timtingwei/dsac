@@ -782,3 +782,30 @@ typedef struct BiTNode {
 知道前后, 不能确定一棵二叉树!!
 
 ### 二叉树的建立
+```cpp
+/* 二叉树的二叉链表结点结构定义 */
+typedef struct BiTNode {
+  TElemType data;
+  struct BiTNode *lchild, *rchild;
+} BiTNode, *BiTree;
+
+
+// 中序遍历建立二叉树
+void CreateBiTree(BiTree *T) {
+  TElemType ch;
+  scanf("%c", &ch);
+  if (ch == '#') {
+    *T = NULL;
+  } else {
+    *T = (BiTree) malloc (sizeof(BiTNode));
+    if (!*T) exit(OVERFLOW);
+    (*T) -> data = ch;
+    printf("data=%c\n", (*T)->data);
+    CreateBiTree(&((*T)->lchild));   /* 构造左子树 */
+    CreateBiTree(&((*T)->rchild));   /* 构造右子树 */
+  }
+}
+// AB#D##C##   前序
+// #B#D#A#C#   中序
+// ###DB##CA   后序
+```
