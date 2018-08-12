@@ -1010,3 +1010,171 @@ fi(key) = (f(key) + di) mod M (di是一个随机数列)
 性能:
 > * 在冲突的数据很少的情况下, 公共溢出区的结构对查找性能来说很高。
 
+
+
+#### 8.12 散列表查找实现
+
+##### 8.12.1 实现
+先列出我自己意淫的代码
+``` cpp
+Status InitHashTable(HashTable *s, int n) {
+  /* 初始化散列表 */
+  /* 假设构造时输入的n小于MAXLEN */
+  (*s).elem = (int *) malloc (sizeof(int) * n);
+  if (!(*s).elem) exit(OVERFLOW);
+  (*s).count = 0;
+  m = 3;     /* 表长为3 */
+  for (int i = 0; i < n; i++) {
+    (*s).elem[i] = NULLKEY;
+  }
+  return OK;
+}
+
+/* 散列函数 根据键值来计算插入时地址 */
+int Hash(int key) {
+  return key % m;      /* 对key值求表长的余数为关键字 除留余数法*/
+}
+
+/* 在散列表中插入一个元素 */
+Status InsertHash(HashTable *s, int e) {
+  int key = Hash(e);
+  while ((*s).elem[key] != NULLKEY) {
+    key = Hash(key+1);
+  }
+  s->elem[key] = e;
+  s->count++;
+
+  return OK;
+}
+
+/* 在散列表中查找一个元素, 返回下标 */
+int SearchHash(HashTable *s, int e) {
+  int pos = -1;
+
+  int key = Hash(e);
+  while ((*s).elem[key] != e) {    // why? 找不到如何处理?
+    key = Hash(key+1);
+  }
+
+  return pos;
+}
+```
+
+<span sytle="color:red">自己写的时候, 不太理解的点</span>
+> * 散列表查找并非查找元素, 而是查找key关键字, 因此插入是在address位置, 插入key; 而不是在key位置插入value
+> * 散列插入的位置address是根据key求出来的.
+
+<span sytle="color:red">仍旧不太理解的点</span>
+> * count为什么赋值m, 为什么散列表的元素个数就是表长
+> * 表长是什么？如果元素个数就是表长的话, 为什么除留余数法不是除比它小的数?
+> * 查找函数中, 回到原点不是很理解 if (H->elem[*addr] == NULLKEY || *addr == Hash(key)) return UNSUCCESS;
+
+1, 构造时数组元素的长度是确定的, 只有一些address对应的key为NULLKEY
+
+2, 表长的问题基本可以解决:
+根据前辈们的经验, 若散列表表长为m, 通常p为小于或等于表长的最小质数或不包含小于20质因子的合数
+
+修改后代码：
+
+```cpp
+#define SUCCESS 1
+#define UNSUCCESS 0
+#define HASHSIZE  12        /* 散列表数组长度 */
+#define NULLKEY -32768      /* 空键值 */
+typedef struct {
+  int *elem;                /* 存放元素的动态数组 */
+  int count;                /* 当前元素个数 */
+} HashTable;
+
+int m = 0;                  /* 散列表表长 */
+```
+
+定义三个实例变量, 数组, 元素个数, 以及表长..
+
+```cpp
+Status InitHashTable(HashTable *H) {
+  /* 初始化散列表 */
+  int i;
+  m = HASHSIZE;
+  /* H->count = 0; */
+  H->count = m;         /* why? 表长的意义是什么? 为什么count这个为表长? */
+  H->elem = (int *) malloc (sizeof(int) * m);
+  if (!(*H).elem) exit(OVERFLOW);
+  for (i = 0; i < m; i++) {
+    (*H).elem[i] = NULLKEY;
+  }
+  return OK;
+}
+```
+
+初始化时, 每个地址的上的key值都是空键值, 这里用宏定义一个常量NULLKEY后来表示
+
+接下来定义散列函数, 散列函数根据key值返回address
+```cpp
+/* 散列函数 根据键值来计算插入时地址 */
+int Hash(int key) {
+  return key % m;      /* 对key值求表长的余数为关键字 除留余数法*/
+}
+```
+
+```cpp
+/* 插入关键字进散列表 */
+void InsertHash(HashTable *H, int key) {
+  int addr = Hash(key);
+  while (H->elem[addr] != NULLKEY) {   /* 如果不为空则冲突 */
+    addr = (addr + 1) % m;             /* 开放定址法的线性探测, 可更改为其他 */
+  }
+  H->elem[addr] = key;                 /* 直到有空位后插入关键字 */
+}
+```
+
+这个除留余数法和开放定址法均可以有其他不同的选择
+
+```cpp
+/* 散列表查找关键字 */
+Status SearchHash(HashTable *H, int key, int *addr) {
+  *addr = Hash(key);
+  while (H->elem[*addr] != key) {
+    *addr = (*addr + 1) % m;
+    if (H->elem[*addr] == NULLKEY || *addr == Hash(key)) {
+      /* 下一个地址不存在, 或者回到原点 不是很理解*/
+      return UNSUCCESS;               /* 关键字不存在 */
+    }
+  }
+  return SUCCESS;
+}
+```
+
+<span style="color:red">散列表查找的是关键字, 
+存储时, 关键字通过散列函数, 计算得到散列地址, H[addr] = key;
+查找时, 关键字通过散列函数, 计算得到散列地址, 判断该地址或者一个地址是否H[addr] ?= key, 来判断是否存在</span>
+
+##### 8.12.2 散列表查找性能分析
+
+散列表如果没有冲突的话, 时间复杂度O(1), 一个address对应一个key
+但通常这是理想情况.
+
+散列查找的平均查找长度取决因素:
+> * 1, 散列函数是否均匀
+> * 2, 处理冲突的方法
+> * 3, 散列表的装填因子
+
+###### 1, 散列函数是否均匀
+好坏会影响出现冲突的频繁成都, 
+但不同的散列函数对同一组随机的关键字, 产生冲突的可能性是相同的.
+
+###### 2, 处理冲突的方法
+线性探测处理冲突可能会产生堆积, 显然没有二次探测法好, 而链地址法冲突不会产生任何堆积, 更具有平均查找性能
+
+###### 3, 散列表的装填因子
+
+装填因子=填入表中的记录个数 / 散列表长度.
+
+可以理解为装满的程度。
+
+装满程度越大, 产生冲突的可能性就越大。
+
+<span styl="color:red">散列表的平均查找长度取决于装填因子, 而不是取决于查找集合中的记录个数 why?
+根据这一点的做法, 通常会把散列表的空间设置得比查找集合大, 虽然浪费了一定的空间, 但换来了效率(以空间换时间)</span>
+
+
