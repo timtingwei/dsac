@@ -18,6 +18,7 @@ double f1(int n, double a[], double x) {
   for (i = 0; i <= n; i++) {
     ans += a[i]*pow(x, i);
   }
+
   return ans;
 }
 
