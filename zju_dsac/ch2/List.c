@@ -38,6 +38,7 @@ List makeEmpty() {
 
 Status find(List L, ElementType elem) {
   Position i; Status NotFound = -1;
+  /* 用while循环, 可统一用i作为判断找到与否的条件 */
   while (i <= L->Last && L->Data[i] != elem)
     i++;
   if (i > L->Last) {
@@ -48,32 +49,39 @@ Status find(List L, ElementType elem) {
 }
 
 Status insert(List L, ElementType elem, Position i) {
+  /* 检查表是否满 */
   if (L->Last == MAXSIZE-1) {
     printf("Overflow\n");
     return OVERFLOW;
   }
 
+  /* 检查插入位置是否合法 */
   if (i < 1 || i > L->Last+2) {
     printf("Error\n");
     return ERROR;
   }
 
+  /* 从右向左, 做整体向右移动的操作 */
   Position j;
   for (j = L->Last; j >= i-1; j--) {
     L->Data[j+1] = L->Data[j];
   }
+
+  /* 插入元素 改变最后元素的下标 */
   L->Data[i-1] = elem;
   L->Last++;
   return OK;
 }
 
 Status delete(List L, Position i, ElementType *elem) {
+  /* 检查插入位置的合法性 */
   if (i < 1 || i > L->Last+1) {
     printf("Error\n");
     return ERROR;
   }
 
   Position j;
+  /* 记录被删除元素 */
   *elem = L->Data[i];
   /* for (j = i; j <= L->Last-1; j++) { */    /* debug04 */
   /* L->Last是最后一个元素下标, 同样需要移动 */
