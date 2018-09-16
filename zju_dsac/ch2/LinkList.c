@@ -27,8 +27,6 @@ int length(List L) {
   return len;
 }
 
-/* #define ERROR NULL */
-/* Position findKth(List L, int K) {} */
 
 #define ERROR -1
 ElementType findKth(List L, int K) {
@@ -39,18 +37,18 @@ ElementType findKth(List L, int K) {
     return ERROR;
   }
   */
+  /* 可以不必提前检查合法性*/
   Position p;
-  int i;
+  int cnt = 1;
   p = L;
-  i = 1;
-  while (p && i != K) {
+  while (p && cnt != K) {
     p = p->Next;
-    i++;
+    cnt++;
   }
-  if (i == K) {
+  /* if (cnt == K) { debug01: 当K是未元素的下一个元素的序号, 要判断p是否null */
+  if ((cnt == K) && p) {
     return p->Data;
   } else {
-    printf("Error\n");
     return ERROR;
   }
 }
@@ -69,7 +67,6 @@ Position find(List L, ElementType elem) {
     return NULL;
   }
 }
-
 
 
 
