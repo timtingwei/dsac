@@ -69,6 +69,7 @@ Position find(List L, ElementType elem) {
 }
 
 
+/* 不带头结点的链表插入 */
 #define ERROR_P NULL
 List insert(List L, ElementType elem, int i) {
   if (i < 1) {
@@ -102,3 +103,44 @@ List insert(List L, ElementType elem, int i) {
   }
 }
 
+
+/* 带头结点的链表插入 */
+bool insert_H(List L, ElementType elem, int i) {
+  Position prev, node;
+  int cnt = 0;
+  prev = L;
+  while (prev && cnt < i-1) {
+    prev = prev->Next; cnt++;
+  }
+  if (prev && cnt == i-1) {
+    /* 插入新结点 */
+    node = (Position)malloc(sizeof(struct LNode));
+    node->Data = elem;
+    node->Next = prev->Next;
+    prev->Next = node;
+    return true;
+  } else {
+    /* 插入位置不合法 */
+    return false;
+  }
+}
+
+/* 带头结点的链表删除 */
+bool delete(List L, int i) {
+  Position prev, tmp;
+  int cnt = 0;
+  prev = L;
+  while (prev && cnt < i-1) {
+    prev = prev->Next; cnt++;
+  }
+  if (prev && prev->Next && cnt == i-1) {
+    /* 删除旧的结点 */
+    tmp = prev->Next;
+    prev->Next = tmp->Next;
+    free(tmp);
+    return true;
+  } else {
+    /* 删除的位置不合法 */
+    return false;
+  }
+}
