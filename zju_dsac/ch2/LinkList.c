@@ -103,9 +103,13 @@ List insert(List L, ElementType elem, int i) {
   }
 }
 
+typedef int Status;
+#define OK 1
+#define FAIL 0
 
 /* 带头结点的链表插入 */
-bool insert_H(List L, ElementType elem, int i) {
+Status insert_H(List L, ElementType elem, int i) {
+  /* L默认有头结点 */
   Position prev, node;
   int cnt = 0;
   prev = L;
@@ -118,15 +122,16 @@ bool insert_H(List L, ElementType elem, int i) {
     node->Data = elem;
     node->Next = prev->Next;
     prev->Next = node;
-    return true;
+    return OK;
   } else {
     /* 插入位置不合法 */
-    return false;
+    return FAIL;
   }
 }
 
 /* 带头结点的链表删除 */
-bool delete(List L, int i) {
+Status delete(List L, int i) {
+  /* L默认有头结点 */
   Position prev, tmp;
   int cnt = 0;
   prev = L;
@@ -138,9 +143,9 @@ bool delete(List L, int i) {
     tmp = prev->Next;
     prev->Next = tmp->Next;
     free(tmp);
-    return true;
+    return OK;
   } else {
     /* 删除的位置不合法 */
-    return false;
+    return FAIL;
   }
 }
