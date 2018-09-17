@@ -385,97 +385,89 @@ Status delete(List L, Position i, ElementType *elem) {
   L->Last--;
   return OK;
 }
+```
 
 
-#include <stdio.h>
-/* malloc在stdlib中 */
-#include <stdlib.h>              /* debug02 */
-
-typedef int ElementType;
-
-#define MAXSIZE 100
-
-typedef int Status;
-#define ERROR 0
-#define OVERFLOW -1
-#define OK 1
-
-typedef int Position;
-// typedef LNode *ptrToNode;     /* debug03 */
-/* 定义结构指针需要加struct */
-typedef struct LNode *ptrToNode;
-
-struct LNode {
-  Position Last;
-  // ptrToNode Data[MAXSIZE];    /* debug01 */
-  /* Data的类型是ElementType数组*/
-  ElementType Data[MAXSIZE];
-};
-
-typedef ptrToNode List;
+### 链式线性表存储
 
 
-List makeEmpty() {
-  List L;
-  L = (List)malloc(sizeof(struct LNode));
-  L->Last = -1;
-  return L;
+我自己写的插入的方法, 用两个结点去移动, 插入一个新分配的结点
+```cpp
+#define ERROR_P NULL
+List insert(List L, ElementType elem, int i) {
+  if (i < 1) {
+    return ERROR_P;     /* 链表头部之前的插入位置不合法 */
+  }
+  /* debug1: 统一为插入结点分配空间 */
+  List node;
+  node = (List)malloc(sizeof(struct LNode));
+  node->Data = elem;    /*debug05: 结点的元素也可以事先分配 */
+  if (i == 1) {        /* 在链表头部插入 */
+    node->Next = L;
+    return node;
+  } else {            /* 在表头以外的位置插入 */
+    Position prevP = L, p;
+    /* p = L->Next; */
+    if (prevP == NULL) {
+      /* 此时i不为1, 插入不合法 */  /* debug04: 空链表L->Next不合法 */
+      free(node);
+      return ERROR_P;
+    }
+    p =  L->Next;
+    /* int j = 2; */  /* debug02: prevP存在, 可在尾部n+1插入*/
+    int j = 1;
+    while (prevP && j != i-1) {
+      prevP = prevP->Next;
+      p = prevP->Next;
+      j++;
+    }
+    // if (j == i ) {
+    if (j == i-1 && prevP) {  /* prevP此时为插入序号的前一个 */
+      node->Next = p;
+      prevP->Next = node;
+      return L;
+    } else {
+      free(node);        /* debug03: 插入失败要回收结点 */
+      return ERROR_P;    /* 在链表尾部不存在可插入的结点 */
+    }
+  }
 }
+```
+<span style="color:red">实际上只要移动前缀结点, 当前结点用prev->Next去记录,</span>
+```
+node->Next = prev->Next;
+prev->Next = node;
+```
+这个是修改链接关系的核心代码.
 
-Status find(List L, ElementType elem) {
-  Position i; Status NotFound = -1;
-  /* 用while循环, 可统一用i作为判断找到与否的条件 */
-  while (i <= L->Last && L->Data[i] != elem)
-    i++;
-  if (i > L->Last) {
-    return NotFound;
+插入的正确代码(不带头结点)
+```cpp
+#define ERROR_P NULL
+List insert(List L, ElementType elem, int i) {
+  if (i < 1) {
+    return ERROR_P;
+  }
+  List node, prev;
+  node = (List)malloc(sizeof(struct LNode));
+  node->Data = elem;
+  if (i == 1) {
+    node->Next = L;
+    return node;
   } else {
-    return i;     /* 返回该元素的下标 */
+    prev = L;
+    int cnt = 1;
+    while (prev && cnt < i-1) {
+      prev = prev->Next; cnt++;
+    }
+    if (prev && cnt == i-1) {
+      node->Next = prev->Next;
+      prev->Next = node;
+      return L;
+    } else {
+      free(node);
+      return ERROR_P;
+    }
   }
-}
-
-Status insert(List L, ElementType elem, Position i) {
-  /* 检查表是否满 */
-  if (L->Last == MAXSIZE-1) {
-    printf("Overflow\n");
-    return OVERFLOW;
-  }
-
-  /* 检查插入位置是否合法 */
-  if (i < 1 || i > L->Last+2) {
-    printf("Error\n");
-    return ERROR;
-  }
-
-  /* 从右向左, 做整体向右移动的操作 */
-  Position j;
-  for (j = L->Last; j >= i-1; j--) {
-    L->Data[j+1] = L->Data[j];
-  }
-
-  /* 插入元素 改变最后元素的下标 */
-  L->Data[i-1] = elem;
-  L->Last++;
-  return OK;
-}
-
-Status delete(List L, Position i, ElementType *elem) {
-  /* 检查插入位置的合法性 */
-  if (i < 1 || i > L->Last+1) {
-    printf("Error\n");
-    return ERROR;
-  }
-
-  Position j;
-  /* 记录被删除元素 */
-  *elem = L->Data[i];
-  /* for (j = i; j <= L->Last-1; j++) { */    /* debug04 */
-  /* L->Last是最后一个元素下标, 同样需要移动 */
-  for (j = i; j <= L->Last; j++) {
-    L->Data[j-1] = L->Data[j];
-  }
-  L->Last--;
-  return OK;
 }
 ```
 
@@ -526,41 +518,15 @@ Answer:   -+a*bc/de
 ```
 
 
-```cpp
-#include <cstdio>
-#include <stack>
-using namespace std;
+### 数据类型描述
 
-int main() {
-    int n;
-    int i, j;
-    while (scanf("%d", &n) != EOF) {
-        if (!n) break;
-        int over = 0;
-        for (;;) {
-            int ok = 1, orig_front = 1;
-            stack<int> s;
-            for (i = 0; i < n; i++) {
-                int a; scanf("%d", &a);
-                if (!a) {over = 1; break;}
-                if (s.top() == a) {
-                    s.pop();
-                } else {
-                    if (orig_front <= a && a <= n) {
-                        for (j = orig_front; j <= a; j++) {
-                            s.push(i); orig_front++;
-                        }
-                        s.pop();
-                    } else {
-                        ok = 0;
-                    }
-                }
-            }
-            if (over) break;
-            printf("%s\n", ok ? "Yes" : "No");
-        }
-        printf("\n");
-    }
-    return 0;
-}
-```
+stack.
+一个0个或多个元素的有穷线性表。
+操作集: 长度为Maxsize的堆栈S, 堆栈元素item
+
+五个操作
+> * 创建一个空栈 Stack createEmpty(int maxSize);
+> * 判断栈是否空 int isEmpty(Stack S);
+> * 判断栈是否满 int isFull(Stack S, int maxSize);
+> * 入栈        void push(Stack S, ElementType elem);
+> * 出栈        ElementType pop(Stack S);
