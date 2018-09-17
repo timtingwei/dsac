@@ -68,31 +68,42 @@ Position find(List L, ElementType elem) {
   }
 }
 
+
 #define ERROR_P NULL
 List insert(List L, ElementType elem, int i) {
   if (i < 1) {
     return ERROR_P;     /* 链表头部之前的插入位置不合法 */
-  } else if (i == 1) {
-    List node;
-    node = (List)malloc(sizeof(struct LNode));
+  }
+  /* debug1: 统一为插入结点分配空间 */
+  List node;
+  node = (List)malloc(sizeof(struct LNode));
+  if (i == 1) {        /* 在链表头部插入 */
     node->Data = elem;
     node->Next = L;
     return node;
-  } else {
-    Position prevP = L, p = L->Next;
-    int j = 2;
-    while (p && j != i) {
+  } else {            /* 在表头以外的位置插入 */
+    Position prevP = L, p;
+    /* p = L->Next; */
+    if (prevP == NULL) {
+      /* 此时i不为1, 插入不合法 */  /* debug04: 空链表L->Next不合法 */
+      free(node);
+      return ERROR_P;
+    }
+    p =  L->Next;
+    /* int j = 2; */  /* debug02: prevP存在, 可在尾部n+1插入*/
+    int j = 1;
+    while (prevP && j != i-1) {
       prevP = prevP->Next;
       p = prevP->Next;
       j++;
     }
-    if (j == i) {
-      List node;
-      node = (List)malloc(sizeof(struct LNode));
+    // if (j == i ) {
+    if (j == i-1 && prevP) {  /* prevP此时为插入序号的前一个 */
       node->Data = elem; node->Next = p;
       prevP->Next = node;
       return L;
     } else {
+      free(node);        /* debug03: 插入失败要回收结点 */
       return ERROR_P;    /* 在链表尾部不存在可插入的结点 */
     }
   }
