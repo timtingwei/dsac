@@ -75,32 +75,25 @@ List insert(List L, ElementType elem, int i) {
     return ERROR_P;     /* 链表头部之前的插入位置不合法 */
   }
   /* debug1: 统一为插入结点分配空间 */
-  List node;
+  List node, prev;      /* prev也可以统一声明 */
   node = (List)malloc(sizeof(struct LNode));
+  node->Data = elem;    /*debug05: 结点的元素也可以事先分配 */
   if (i == 1) {        /* 在链表头部插入 */
-    node->Data = elem;
     node->Next = L;
     return node;
   } else {            /* 在表头以外的位置插入 */
-    Position prevP = L, p;
-    /* p = L->Next; */
-    if (prevP == NULL) {
-      /* 此时i不为1, 插入不合法 */  /* debug04: 空链表L->Next不合法 */
-      free(node);
-      return ERROR_P;
+    prev = L;
+    /* p = L->Next; */  /* debug06: 只需要prev一个结点, 不需要当前结点 */
+    /* int cnt = 2; */   /* debug02: prevP存在, 可在尾部n+1插入*/
+    int cnt = 1;
+    while (prev && cnt != i-1) {
+      prev = prev->Next;
+      cnt++;
     }
-    p =  L->Next;
-    /* int j = 2; */  /* debug02: prevP存在, 可在尾部n+1插入*/
-    int j = 1;
-    while (prevP && j != i-1) {
-      prevP = prevP->Next;
-      p = prevP->Next;
-      j++;
-    }
-    // if (j == i ) {
-    if (j == i-1 && prevP) {  /* prevP此时为插入序号的前一个 */
-      node->Data = elem; node->Next = p;
-      prevP->Next = node;
+    // if (cnt == i ) {
+    if (cnt == i-1 && prev) {  /* prevP此时为插入序号的前一个 */
+      node->Next = prev->Next;
+      prev->Next = node;
       return L;
     } else {
       free(node);        /* debug03: 插入失败要回收结点 */
@@ -108,8 +101,4 @@ List insert(List L, ElementType elem, int i) {
     }
   }
 }
-
-
-
-
 
