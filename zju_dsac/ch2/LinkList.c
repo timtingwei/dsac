@@ -3,7 +3,7 @@
 // 线性表的链式存储
 
 #include <stdio.h>
-
+#include <stdlib.h>
 typedef int ElementType;
 
 /* 定义结构 */
@@ -67,6 +67,38 @@ Position find(List L, ElementType elem) {
     return NULL;
   }
 }
+
+#define ERROR_P NULL
+List insert(List L, ElementType elem, int i) {
+  if (i < 1) {
+    return ERROR_P;     /* 链表头部之前的插入位置不合法 */
+  } else if (i == 1) {
+    List node;
+    node = (List)malloc(sizeof(struct LNode));
+    node->Data = elem;
+    node->Next = L;
+    return node;
+  } else {
+    Position prevP = L, p = L->Next;
+    int j = 2;
+    while (p && j != i) {
+      prevP = prevP->Next;
+      p = prevP->Next;
+      j++;
+    }
+    if (j == i) {
+      List node;
+      node = (List)malloc(sizeof(struct LNode));
+      node->Data = elem; node->Next = p;
+      prevP->Next = node;
+      return L;
+    } else {
+      return ERROR_P;    /* 在链表尾部不存在可插入的结点 */
+    }
+  }
+}
+
+
 
 
 
