@@ -31,12 +31,14 @@ void push(Stack S, ElementType elem, int tag) {
     return;
   }
   if (tag == 0) {
-    S->Data[++S->top1] = elem;
+    // S->Data[++S->top1] = elem;
+    S->Data[++(S->top1)] = elem;
   } else {
-    S->Data[--S->top2] = elem;
+    S->Data[--(S->top2)] = elem;
   }
 }
 
+/*
 #define ERROR -1
 #define OK 1
 int delete(Stack S, ElementType *elem, int tag) {
@@ -49,4 +51,15 @@ int delete(Stack S, ElementType *elem, int tag) {
     S->top2++;
   }
   return OK;
+}
+*/
+
+ElementType delete(struct LNode *S, int tag) {
+  if (tag == 0) {
+    if (S->top1 == -1) return NULL;
+    else  return S->Data[(S->top1)--];
+  } else {
+    if (S->top2 == S->maxSize) return NULL;
+    else  return S->Data[(S->top2)++];
+  }
 }
