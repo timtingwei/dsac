@@ -19,7 +19,8 @@ typedef ptrToNode Stack;
 
 Stack createEmpty(int maxSize) {
   Stack S;
-  S->Data = (ElementType*)malloc(sizeof(ElementType) * maxSize);
+  // S->Data = (ElementType*)malloc(sizeof(ElementType) * maxSize);
+  S = (Stack)malloc(sizeof(struct LNode) * maxSize);
   S->top1 = -1; S->top2 = maxSize;
   S->maxSize = maxSize;
   return S;
