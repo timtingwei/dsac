@@ -15,9 +15,15 @@ int IsFullQ(Queue Q, int maxSize) {
   return result
 }
 
-void AddQ(Queue Q, ElementType item) {
+void AddQ(Queue PtrQ, ElementType item) {
   // 将数据元素item插入队列Q中
-  return
+  // 循环队列不放满的情况
+  if ((PtrQ->rear+1) % MAXSIZE == PtrQ->front) {
+    printf("队列满");
+    return ERROR;
+  }
+  PtrQ->rear = (PtrQ->rear+1) % MAXSIZE;
+  PtrQ->Data[PtrQ->rear] = item
 }
 
 int IsEmpty(Queue Q) {
@@ -25,7 +31,13 @@ int IsEmpty(Queue Q) {
   return result
 }
 
-ElementType DeleteQ(Queue Q) {
+ElementType DeleteQ(Queue PtrQ) {
   // 将队头数据删除并返回
-  return item
+  // 非满循环队列的出队操作
+  if (PtrQ->front == PtrQ->rear) {
+    printf("队列空");
+    return ERROR;
+  }
+  PtrQ->front = (PtrQ->front+1) % MAXSIZE;
+  return PtrQ->Data[PtrQ->front]
 }
