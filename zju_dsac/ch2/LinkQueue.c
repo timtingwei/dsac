@@ -41,3 +41,13 @@ ElementType DeleteQ(Queue PtrQ) {
   free(FrontCell);                   /* 释放被删除节点空间 */
   return FrontElem;
 }
+
+
+void EnQueue(Queue PtrQ, ElementType elem) {
+  /* 链式队列的入队操作 */
+  struct QNode Node;
+  Node->Next = NULL; Node->Data = elem;
+  PtrQ->rear->Next = Node;
+  PtrQ->rear = Node;
+  return
+}
