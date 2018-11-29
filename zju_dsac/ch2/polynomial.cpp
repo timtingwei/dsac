@@ -70,3 +70,22 @@ Polynomial AddPoly(Polynomial P1, Polynomial P2) {
   free(temp);
   return front;
 }
+
+
+Polynomial MultiPoly(Polynomial P1, Polynomial P2);  // 多项式的乘法
+
+Polynomial ReadPoly();   // 读取多项式
+
+void PrintPoly(Polynomial P);   // 输出多项式
+
+
+int main() {
+  // 多项式加和乘框架
+  Polynomial P1, P2, SP, PP;
+  P1 = ReadPoly(); P2 = ReadPoly();
+  SP = AddPoly(P1, P2);
+  PP = MultiPoly(P1, P2);
+  PrintPoly(SP);
+  PrintPoly(PP);
+  return 0;
+}
