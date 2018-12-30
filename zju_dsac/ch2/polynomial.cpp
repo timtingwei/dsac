@@ -76,6 +76,23 @@ Polynomial MultiPoly(Polynomial P1, Polynomial P2);  // 多项式的乘法
 
 Polynomial ReadPoly();   // 读取多项式
 
+Polynomial ReadPoly() {
+  Polynomial P, Rear, t;
+  int c, e, N;
+
+  scanf("%d", &N);
+  P = (Polynomial)malloc(sizeof(struct PolyNode));    /* 链表头空节点 */
+  P->link = NULL;
+  Rear = P;
+
+  while (N--) {
+    scanf("%d %d", &c, &e);
+    Attach(c, e, &Rear);
+  }
+  t = P; P = P->link; free(t);   /* 删除临时生成的头节点 */
+  return P;
+}
+
 void PrintPoly(Polynomial P);   // 输出多项式
 
 
@@ -89,104 +106,3 @@ int main() {
   PrintPoly(PP);
   return 0;
 }
-
-// update
-// update both
-// Update today
-// Update today
-// not good today
-// birthday
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
-// update today
