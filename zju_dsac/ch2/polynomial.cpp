@@ -162,6 +162,7 @@ void PrintPoly(Polynomial P) {
     printf("%d %d", P->coef, P->expon);
     P = P->link;
   }
+  print("\n");
 }
 
 
