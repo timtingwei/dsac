@@ -93,7 +93,76 @@ Polynomial ReadPoly() {
   return P;
 }
 
+Polynomial MultiPoly(Polynomial P1, Polynomial P2) {
+  Polynomial P, Rear, t1, t2, t;
+  int c, e;
+
+  if (!P1 || !P2) return NULL;
+
+  t1 = P1; t2 = P2;
+  P = (Polynomial)malloc(sizeof(struct PolyNode)); P->link = NULL;
+  Rear = P;
+  while (t2) {   /* 先用P1的首项乘以P2的每一项 */
+    Attach(t1->coef*t2->coef, t1->expon+t2->expon, &Rear);
+    t2 = t2->link;
+  }
+  t1 = t1->link;
+  while (t1) {
+    t2 = P2; Rear = P;
+    // ...
+    while (t2) {
+      // ...
+      e = t1->expon+t2->expon;
+      c = t1->coef*t2->coef;
+      if (Rear->link && Rear->link->expon > e) {
+        Rear = Rear->link;
+      } else if (Rear->link && Rear->link->expon == e) {   /* 指数相同 */
+        if (Rear->link->coef + c) {   // 相加系数非0
+          // Attach(c+Rear->link->coef, e, &Rear);      /* 系数相加指数不变 */
+          Rear->link->coef += c;      /* 不需要新的节点 */
+        } else {   // 相加系数为0
+          t = Rear->link;
+          Rear->link = t->link;
+          free(t)
+          // ??
+        }
+        
+      } else {
+        /* 下一项系数比当前e小, 申请节点插入 */
+        // Attach(c, e, &Rear);
+        t = (Polynomial)malloc(sizeof(struct PolyNode));
+        t->coef = c; t->expon = e;
+        t->link = Rear->link;
+        Rear->link = t; Rear = Rear->link;
+      }
+      t2 = t2->link;
+    }
+    t1 = t1->link;
+  }
+
+  t2 = P; P = P->link; free(t2);
+  return P;
+}
+
 void PrintPoly(Polynomial P);   // 输出多项式
+
+void PrintPoly(Polynomial P) {
+  /* 输出多项式 */
+  int flag = 0;    /* 用于控制打印格式 */
+
+  if (!P) {
+    printf("0 0\n"); return;
+  }
+  while (P) {
+    if (!flag) {
+      flag = 1;
+    } else {
+      printf(" ");
+    }
+    printf("%d %d", P->coef, P->expon);
+    P = P->link;
+  }
+}
 
 
 int main() {
