@@ -29,3 +29,36 @@ void InOrderTraversal(BinTree BT) {
     }
   }
 }
+
+
+/* 堆栈实现前序遍历非递归 */
+void InOrderTraversal(BinTree BT) {
+  BinTree T = BT;
+  Stack S = CreateStack(MAXSIZE);
+  while (T || !IsEmpty(S)) {
+    while (T) {        /* 一直向左并将结点压入堆栈*/
+      Push(S, T);
+      printf("%5d", T->Data); /* 打印结点 */
+      T = T->Left;
+    }
+    if (!IsEmpty(S)) {
+      T = Pop(S);      /* 结点弹出堆栈 */
+      T = T->Right;    /* 转向右子树 */
+    }
+  }
+}
+
+
+/* 队列实现层序遍历 */
+void LevelOrderTraversal(BinTree BT) {
+  Queue Q; BinTree T;
+  if (!BT) return;    /* 空树则直接返回 */
+  Q = CreateQueue(MAXSIZE);
+  AddQ(Q, BT);
+  while (!IsEmpty(Q)) {
+    T = DeleteQ(Q);
+    printf("%d", T->Data);
+    if (T->Left) AddQ(Q, T->Left);
+    if (T->Right) AddQ(Q, T->Right);
+  }
+}
