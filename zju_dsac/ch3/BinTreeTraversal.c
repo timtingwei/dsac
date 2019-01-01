@@ -62,3 +62,16 @@ void LevelOrderTraversal(BinTree BT) {
     if (T->Right) AddQ(Q, T->Right);
   }
 }
+
+
+/* 二叉树遍历应用: 输出所有的叶结点 */
+void PreOrderPrintLeaves(BinTree BT) {
+  if (BT) {
+    if (!BT->Left && !BT->Right) {
+      printf("%d", BT->Data);
+    }
+    PreOrderPrintLeaves(BT->Left);
+    PreOrderPrintLeaves(BT->Right);
+  }
+}
+
