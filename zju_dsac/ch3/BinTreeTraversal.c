@@ -75,7 +75,7 @@ void PreOrderPrintLeaves(BinTree BT) {
   }
 }
 
-/* 求二叉树的高度 */
+/* 后序遍历求二叉树的高度 */
 int PostOrderGetHeight(BinTree BT) {
   int HL, HR, MaxH;
   if (BT) {
