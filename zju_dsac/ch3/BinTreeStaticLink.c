@@ -19,32 +19,38 @@ struct TNode {
 /* 用结构数组创建一棵二叉树 */
 Tree BuildTree() {
   int i, N, check[MaxTree];
-  struct TNode *Elements[MaxTree];
+  struct TNode T[MaxTree];   /* 为什么不定义成指针, 而是.呢? */
   ElementType cl, cr;
-  Tree Root;
-  scanf("%d", &N);
+  Tree Root = -1;      /* 悲观打算 */
+  scanf("%d\n", &N);   /* 标准输入按照格式 */
   if (N) {
+    for (i = 0; i < N; i++) check[i] = 0;
+
     for (i = 0; i < N; i++) {
-      check[i] = 0;
+      scanf("%c %c %c\n",
+            &T[i].Element, &cl, &cr);      /* 以字符形式读入 */
+
+      if (cl != '-') {
+        T[i].Left = cl - '0';
+        check[T[i].Left] = 1;
+      } else {
+        T[i].Left = Null;
+      }
+
+      if (cr != '-') {
+        T[i].Right = cr - '0';
+        check[T[i].Right] = 1;
+      } else {
+        T[i].Right = Null;
+      }
     }
 
     for (i = 0; i < N; i++) {
-      scanf("%c %c %c", &Elements[i]->Element, &cl, &cr);   /* 以字符形式读入 */
-      Elements[i]->Left  = (cl == '-') ? Null : (cl - '0');
-      Elements[i]->Right = (cr == '-') ? Null : (cr - '0');
-
-      if (cl != '-') check[cl - '0'] = 1;
-      if (cr != '-') check[cr - '0'] = 1;
-    }
-
-    for (i = 0; i < N; i++) {
-      if (check[i] == 0) break;
+      if (!check[i]) break;
     }
     Root = i;
-    return Root;
-  } else {
-    return -1;
   }
+  return Root;
 }
 
 int main() {
