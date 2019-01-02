@@ -41,3 +41,31 @@ Position IterFind(BinTree BST, ElementType X) {
   }
   return NULL;
 }
+
+
+/* BST找最小值, 迭代版本 */
+Position FindMin(BinTree BST) {
+  if (BST) {
+    while (BST->Left) BST = BST->Left;
+  }
+  return BST;
+}
+
+/* BST找最大值, 递归版本 */
+Position FindMax(BinTree BST) {
+  if (!BST) {
+    return NULL;
+  } else if (!BST->Right) {
+    return BST;
+  } else {
+    return FindMax(BST->Right);
+  }
+}
+
+/* BST找最大值, 迭代版本 */
+Position FindMaxIter(BinTree BST) {
+  if (BST) {
+    while (BST->Right) BST = BST->Right;
+  }
+  return BST;
+}
