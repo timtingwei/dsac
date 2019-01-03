@@ -17,9 +17,24 @@ typedef Heap MinHeap;
 MaxHeap CreateHeap(int MaxSize) {
   /* 创建一个最大堆 */
   MaxHeap H = malloc(sizeof(struct HNode));
-  H->Data = malloc((MaxSize) * sizeof (struct HNode));
+  H->Data = malloc((MaxSize + 1) * sizeof(ElementType));
   H->Size = 0;
   H->Capacity = MaxSize;
   H->Elements[0] = MAXDATA;
   return H;
+}
+
+
+void Insert(MaxHeap H, ELementType item) {
+  /* 最大堆的插入 */
+  int i;
+  if (IsFull(H)) {
+    print("堆满\n");
+    return;
+  }
+  i = ++H->Size;    /* item初始作为最后一个元素插入 */
+  for ( ; H->Data[i/2] < item; i /= 2) {   /* 与父节点比较并向上 */
+    H->Data[i] = H->Data[i/2];             /* 与父节点交换位置 */
+  }
+  H->Data[i] = item;                       /* 将item插入 */
 }
