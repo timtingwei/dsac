@@ -25,6 +25,7 @@ MaxHeap CreateHeap(int MaxSize) {
 }
 
 
+/* T(n) = O(logn) 树的高度 */
 void Insert(MaxHeap H, ELementType item) {
   /* 最大堆的插入 */
   int i;
@@ -34,7 +35,33 @@ void Insert(MaxHeap H, ELementType item) {
   }
   i = ++H->Size;    /* item初始作为最后一个元素插入 */
   for ( ; H->Data[i/2] < item; i /= 2) {   /* 与父节点比较并向上 */
+         /* 用哨兵元素控制越界 */
     H->Data[i] = H->Data[i/2];             /* 与父节点交换位置 */
   }
   H->Data[i] = item;                       /* 将item插入 */
+}
+
+
+ElementType DeleteMax(MaxHeap H) {
+  /* 最大堆的删除 */
+  int Parent, Child;
+  ElementType MaxItem, temp;
+  if (IsEmpty(H)) {
+    printf("栈空\n"); return;
+  }
+  MaxItem = H->Data[1];
+  temp = H->Data[H->Size--];
+  for (Parent = 1; Parent*2 <= H->Size; Parent = Child) {
+    Child = Parent * 2;
+    if (Child != H->Size &&
+        H->Data[Child] < H->Data[Child+1])
+      Child++;   /* 找到左右孩子中较大的 */
+    if (temp >= H->Data[Child]) {
+      break;
+    } else {
+      H->Data[Parent] = H->Data[Child];
+    }
+  }
+  H->Data[Parent] = temp;
+  return MaxItem;
 }
