@@ -25,6 +25,6 @@ void Union(SetType S[ ], ElementType X1, ElementType X2) {
   Root1 = Find(S, X1);
   Root2 = Find(S, X2);
   if (Root1 != Root2) {   /* 两个不同的集合 */
-    S[Root1].Parent = Root2;
+    S[Root2].Parent = Root1;
   }
 }
