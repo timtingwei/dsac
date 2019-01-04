@@ -1,6 +1,6 @@
 // Copyright [2019] <mituh>
 // SetFind.c
-// 集合的存储: 孩子双亲表示法, 以及在集合中查找
+// 集合的存储: 孩子双亲表示法, 并查集
 
 typedef struct {
   ElementType Data;
@@ -17,4 +17,14 @@ int Find(SetType S[ ], ElementType X) {
   if (i >= MaxSize) return -1;    /* 没找到元素X */
   for ( ; S[i].Parent >= 0; i = S[i].Parent) {}
   return i;  /* 找到X所属集合, 返回树根结点的下标 */
+}
+
+void Union(SetType S[ ], ElementType X1, ElementType X2) {
+  /* 两个结点的集合并 */
+  int Root1, Root2;
+  Root1 = Find(S, X1);
+  Root2 = Find(S, X2);
+  if (Root1 != Root2) {   /* 两个不同的集合 */
+    Root1.Parent = Root2;
+  }
 }
