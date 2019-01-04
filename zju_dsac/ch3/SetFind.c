@@ -1,10 +1,10 @@
 // Copyright [2019] <mituh>
 // SetFind.c
-// 集合的存储: 孩子双亲表示法, 并查集
+// 集合的存储: 孩子双亲表示法, 并查集, 按秩合并
 
 typedef struct {
   ElementType Data;
-  int Parent;
+  int Parent;   /* 根结点为-n, n代表集合元素个数 */
 } SetType;
 
 #define MaxSize 20
@@ -25,6 +25,12 @@ void Union(SetType S[ ], ElementType X1, ElementType X2) {
   Root1 = Find(S, X1);
   Root2 = Find(S, X2);
   if (Root1 != Root2) {   /* 两个不同的集合 */
-    S[Root2].Parent = Root1;
+    if (S[Root1].Parent < S[Root2].Parent) {   /* Root1的集合数量大 */
+      S[Root2].Parent = Root1;
+      S[Root1].Parent += S[Root2].Parent;      /* Root1集合数量增加 */
+    } else {
+      S[Root1].Parent = Root2;
+      S[Root2].Parent += S[Root1].Parent;      /* Root2集合数量增加 */
+    }
   }
 }
