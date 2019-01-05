@@ -33,3 +33,5 @@ void Union(SetType S, SetName Root1, SetName Root2) {
     S[Root2] = Root1;    /* Root2的父结点为Root1 */
   }
 }
+
+// Update
