@@ -2,6 +2,23 @@
 /* FileTransfer.c           */
 /* 并查集应用 */
 
+/*
+input:
+5
+C 3 2
+I 3 2
+C 1 5
+I 4 5
+I 2 4
+C 3 5
+S
+
+output:
+no
+no
+yes
+There are 2 components
+*/
 
 /* 集合结构数组的表示法
 typedef struct {
@@ -44,10 +61,11 @@ void Input_connection(SetType S) {
   /* 链接两个结点 */
   ElementType u, v;
   SetName Root1, Root2;
-  scanf("%d %d", &u, &v);
-  Root1 = Find(S, u);
-  Root2 = Find(S, v);
+  scanf("%d %d\n", &u, &v);
+  Root1 = Find(S, u-1);
+  Root2 = Find(S, v-1);
   if (Root1 != Root2) {
+    /* printf("Root1 = %d, Root2 = %d\n", Root1, Root2); */
     Union(S, Root1, Root2);
   }
 }
@@ -56,9 +74,9 @@ void Check_connection(SetType S) {
   /* 检查两个结点是否链接 */
   ElementType u, v;
   SetName Root1, Root2;
-  scanf("%d %d", &u, &v);
-  Root1 = Find(S, u);
-  Root2 = Find(S, v);
+  scanf("%d %d\n", &u, &v);
+  Root1 = Find(S, u-1);
+  Root2 = Find(S, v-1);
   if (Root1 != Root2) {
     printf("no\n");
   } else {
@@ -73,14 +91,18 @@ void Check_network(SetType S, int n) {
   for (i = 0; i < n; i++) {
     if (S[i] < 0) cnt++;
   }
-  printf("There are %d components\n", cnt);
+  if (cnt == 1) {
+    printf("The network is connected.\n");
+  } else {
+    printf("There are %d components.\n", cnt);
+  }
 }
 
 int main() {
   /* File Transfer主框架 */
   SetType S;
   int n; char in;
-  scanf("%d", &n);
+  scanf("%d\n", &n);
   Initialization(S, n);
   do {
     scanf("%c", &in);
