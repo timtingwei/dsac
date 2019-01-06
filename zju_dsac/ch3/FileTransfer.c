@@ -43,11 +43,11 @@ void Union(SetType S, SetName Root1, SetName Root2) {
   /* 合并两个集合, 假设Roo1 != Root2 */
   /* 按秩合并: 根据结点规模 */
   if (S[Root1] < S[Root2]) {
+    S[Root1] += S[Root2];     /* 这两句不能颠倒顺序! 先改规模值, 再改指向! */
     S[Root2] = Root1;    /* Root2的父结点为Root1 */
-    S[Root1] += S[Root2];
   } else {
-    S[Root1] = Root2;
     S[Root2] += S[Root1];
+    S[Root1] = Root2;
   }
 }
 
@@ -61,11 +61,10 @@ void Input_connection(SetType S) {
   /* 链接两个结点 */
   ElementType u, v;
   SetName Root1, Root2;
-  scanf("%d %d\n", &u, &v);
+  scanf("%d %d", &u, &v);
   Root1 = Find(S, u-1);
   Root2 = Find(S, v-1);
   if (Root1 != Root2) {
-    /* printf("Root1 = %d, Root2 = %d\n", Root1, Root2); */
     Union(S, Root1, Root2);
   }
 }
@@ -74,7 +73,7 @@ void Check_connection(SetType S) {
   /* 检查两个结点是否链接 */
   ElementType u, v;
   SetName Root1, Root2;
-  scanf("%d %d\n", &u, &v);
+  scanf("%d %d", &u, &v);
   Root1 = Find(S, u-1);
   Root2 = Find(S, v-1);
   if (Root1 != Root2) {
@@ -101,8 +100,9 @@ void Check_network(SetType S, int n) {
 int main() {
   /* File Transfer主框架 */
   SetType S;
-  int n; char in;
-  scanf("%d\n", &n);
+  int n;
+  char in;
+  scanf("%d", &n);
   Initialization(S, n);
   do {
     scanf("%c", &in);
