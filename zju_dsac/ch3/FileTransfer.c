@@ -33,10 +33,20 @@ typedef int ElementType;
 typedef int SetName;     /* 根结点的下标作为集合名称 */
 typedef ElementType SetType[MAXSIZE];
 
-
+/*
 SetName Find(SetType S, ElementType X) {
   for ( ; S[X] >= 0; X = S[X]) {}
-  return X;   /* 该结点为根结点时 循环结束 */
+  return X;
+}
+*/
+
+SetName Find(SetType S, ElementType X) {
+  /* 路径压缩查 */
+  if (S[X] < 0) {
+    return X;
+  } else {
+    return S[X] = Find(S, S[X]);
+  }
 }
 
 void Union(SetType S, SetName Root1, SetName Root2) {
