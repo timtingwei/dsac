@@ -18,7 +18,8 @@ struct TreeNode {
 
 Tree BuildTree(struct TreeNode T[]) {
   /* 建立用于判别的二叉树 */
-  int i, N, cl, cr;
+  int i, N;
+  char cl, cr;
   Tree Root;
   int check[MaxSize];
 
@@ -26,6 +27,7 @@ Tree BuildTree(struct TreeNode T[]) {
   if (N) {
     for (i = 0; i < N; i++) check[i] = 0;
     for (i = 0; i < N; i++) {
+      getchar();   /* 控制输入格式 */
       scanf("%c %c %c", &T[i].Element, &cl, &cr);
 
       if (cl != '-') {
