@@ -41,7 +41,8 @@ No
 typedef struct Node {
   double x, y;
 } Vertex;
-#define Graph Vertex[]
+/* #define Graph Vertex[] */
+typedef Vertex Graph[MaxSize];
 
 /* 鳄鱼池边缘 */
 double Up = 50.0, Down = -50.0, Left = -50.0, Right = 50.0;
@@ -93,7 +94,7 @@ int DFS(Vertex V, int vi) {
   int i, answer, neari, cnt;
   int nearVi[MaxSize];
   cnt = 0;
-  visited[vi] = true;
+  visited[vi] = 1;
   for (i = 0; i < N; i++) {
     if (vi != i && Jump(G[i], G[vi])) {
       nearVi[cnt++] = i;
