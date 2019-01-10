@@ -42,12 +42,12 @@ typedef struct Node {
   double x, y;
 } Vertex;
 /* #define Graph Vertex[] */
+/* typedef Vertex Graph[]; */
 typedef Vertex Graph[MaxSize];
-
 /* 鳄鱼池边缘 */
 double Up = 50.0, Down = -50.0, Left = -50.0, Right = 50.0;
 
-Graph G[MaxSize];
+Graph G;
 int N;                  /* 结点个数 */
 double MaxJump;         /* 跳跃最远距离 */
 int visited[MaxSize];  /* 是否被踩过 */
@@ -95,18 +95,21 @@ int DFS(Vertex V, int vi) {
   int nearVi[MaxSize];
   cnt = 0;
   visited[vi] = 1;
-  for (i = 0; i < N; i++) {
-    if (vi != i && Jump(G[i], G[vi])) {
-      nearVi[cnt++] = i;
-    }
-  }  /* 找出邻接结点序号 */
+  if (IsSafe(G[vi])) {
+    answer = Yes;
+  } else {
+    for (i = 0; i < N; i++) {
+      if (vi != i && Jump(G[i], G[vi])) {
+        nearVi[cnt++] = i;
+      }
+    }  /* 找出邻接结点序号 */
 
-  for (i = 0; i < cnt; i++) {
-    neari = nearVi[i];
-    answer = IsSafe(G[neari]);
-    if (answer == Yes) break;
-    if (!visited[neari]) {
-      answer = DFS(G[neari], neari);
+    for (i = 0; i < cnt; i++) {
+      neari = nearVi[i];
+      if (!visited[neari]) {
+        answer = DFS(G[neari], neari);
+        if (answer == Yes) break;
+      }
     }
   }
   return answer;
