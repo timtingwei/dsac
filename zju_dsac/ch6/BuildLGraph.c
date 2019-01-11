@@ -2,10 +2,26 @@
 /* BuildLGraph.c */
 /* 邻接表 图的建立 */
 
+#include <stdlib.h>
+#include <stdio.h>
 #define MaxVertexNum 100
 #define WeightType int
-#define DataType int
+#define DataType char
 #define Vertex int
+
+/* 邻接点的定义 */
+typedef struct AdjVNode *PtrToAdjVNode;
+struct AdjVNode {
+  Vertex AdjV;   /* 邻接点下标 */
+  WeightType Weight;   /* 边权重 */
+  PtrToAdjVNode Next;  /* 指向下一个邻接点的指针 */
+};
+
+/* 顶点表头结点的定义 */
+typedef struct Vnode {
+  PtrToAdjVNode FirstEdge;
+  DataType Data;
+}AdjList[MaxVertexNum];
 
 /* 图结点的定义 */
 typedef struct GNode *PtrToGNode;
@@ -24,21 +40,7 @@ struct ENode {
 };
 typedef PtrToENode Edge;
 
-/* 顶点表头结点的定义 */
-typedef struct Vnode {
-  PtrToAdjVNode FirstEdege;
-  DataType Data;
-}AdjList[MaxVertexNum];
 
-
-
-/* 邻接点的定义 */
-typedef struct AdjVNode *PtrToAdjVNode;
-struct AdjVNode {
-  Vertex AdjV;   /* 邻接点下标 */
-  WeightType Weight;   /* 边权重 */
-  PtrToAdjVNode Next;  /* 指向下一个邻接点的指针 */
-};
 
 
 /* 初始化一个包含所有顶点, 无边的图 */
@@ -50,7 +52,7 @@ LGraph CreateGraph(int VertexNum) {
   Graph->Nv = VertexNum;
   Graph->Ne = 0;
   for (V = 0; V < Graph->Nv; V++) {
-    Graph->G[i].FirstEdge = NULL;    /* 每个表头结点指向空结点 */
+    Graph->G[V].FirstEdge = NULL;    /* 每个表头结点指向空结点 */
   }
   return Graph;
 }
@@ -101,7 +103,7 @@ LGraph BuildGraph() {
 
   /* 读入表头结点信息 */
   for (V = 0; V < Graph->Nv; V++) {
-    scanf("%c", &(Graph->G[V]));
+    scanf("%c", &(Graph->G[V].Data));
   }
   return Graph;
 }
