@@ -20,6 +20,7 @@ Tree Insert(int Elem, Tree T) {
     T = (Tree)malloc(sizeof(struct TNode));
     T->Data = Elem;
     T->Left = NULL; T->Right = NULL;
+    printf("Elem = %d, arranged\n", Elem);
   } else {
     if (Elem < T->Data) {
       T->Left = Insert(Elem, T->Left);
@@ -33,7 +34,21 @@ Tree Insert(int Elem, Tree T) {
 
 /* 比较两棵树是否相同 */
 int Compare(Tree T1, Tree T2) {
-  if (T1->Data == T2->Data) {
+  if (T1 == NULL && T2 == NULL)  {
+    printf("T1, T2 both NULL\n");
+  } else if (T1 == NULL) {
+    printf("T1 = NULL, T2->Data = %d\n", T2->Data);
+  } else if (T2 == NULL) {
+    printf("T1->Data = %d, T2 = NULL\n", T1->Data);
+  } else {
+    printf("T1->Data = %d, T2->Data = %d\n", T1->Data, T2->Data);
+  }
+  if (T1 == NULL && T2 == NULL) {
+    return 1;
+  } else if ((T1 == NULL && T2 != NULL)
+             || (T1 != NULL && T2 == NULL)) {
+    return 0;
+  } else if (T1->Data == T2->Data) {
     return (Compare(T1->Left, T2->Left)
       && Compare(T1->Right, T2->Right));
   } else {
@@ -45,11 +60,9 @@ int Compare(Tree T1, Tree T2) {
 int main() {
   int N, K, i, Elem, ok, flag;
   flag = 0;
-  // while (scanf("%d", &N) == 1 && (!N)) {
   for (;;) {
     scanf("%d", &N);
     if (!N) break;
-    printf("N = %d\n", N);
     Tree T;
     scanf("%d", &K);
     for (i = 0; i < N; i++) {
