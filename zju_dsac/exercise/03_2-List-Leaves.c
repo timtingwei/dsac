@@ -5,16 +5,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define MaxSize 12
+#define MaxSize 20
 #define Tree int
 #define Null -1
 
-typedef struct TNode {
+struct TNode {
   int Left, Right;
-} Tree[MaxSize];
+} T[MaxSize];
 
 /* 实现关于队列的判空, 创建, 入队,出队操作 */
-
 typedef struct QNode *PtrToQNode;
 struct QNode {
   int front, rear;   /* 队尾和队头的下标 */
@@ -38,21 +37,20 @@ void EnQueue(int Elem, Queue Q) {
 }
 
 int DeQueue(Queue Q) {
-  return Q->Elements[Q->front--];
+  return Q->Elements[Q->front++];
 }
 
 
-Tree BuildTree() {
+int BuildTree() {
   int i, N, Root;
   char cl, cr;
   int check[MaxSize];
 
   scanf("%d", &N);
-  /* T = (Tree)malloc(sizeof(struct TNode) * (N-1)); */
   for (i = 0; i < N; i++) check[i] = 0;
-  getchar();
 
   for (i = 0; i < N; i++) {
+    getchar();
     scanf("%c %c", &cl, &cr);
     if (cl != '-') {
       T[i].Left = cl - '0';
@@ -69,48 +67,49 @@ Tree BuildTree() {
   }
 
   for (i = 0; i < N; i++) {   /* 找到根结点位置 */
-    if (check[i]) break;
+    if (!check[i]) break;
   }
   Root = i;
   return Root;
 }
 
 
-void LevelTraverseTree(Tree T) {
+void LevelTraverseTree(int Root) {
   Queue Q;
   int Tc;
   int ok, flag;
-  ok = 1; flag = 1;
+  flag = 0;
   Q = CreateQueue();
-  EnQueue(T, Q);
+  EnQueue(Root, Q);
 
   while (!IsEmpty(Q)) {
+    ok = 1;
     Tc = DeQueue(Q);
 
     if (T[Tc].Left != Null) {
       ok = 0;
-      EnQueue(T[Tc].Left);
+      EnQueue(T[Tc].Left, Q);
     }
     if (T[Tc].Right != Null) {
       ok = 0;
-      EnQueue(T[Tc].Right);
+      EnQueue(T[Tc].Right, Q);
+    }
+    if (ok) {
+      /* 无左孩子且无右孩子 */
+      if (!flag) {    /* 控制格式 */
+        printf("%d", Tc); flag = 1;
+      } else {
+        printf(" %d", Tc);
+      }
     }
   }
-
-  if (ok) {
-    /* 无左孩子且无右孩子 */
-    if (!flag) {    /* 控制格式 */
-      printf("%d", Tc); flag = 1;
-    } else {
-      printf(" %d", Tc);
-    }
-  }
+  printf("\n");
 }
 
 
 int main() {
-  Tree T;
-  T = BuildTree();
-  LevelTraverseTree(T);
+  int Root;
+  Root = BuildTree();
+  LevelTraverseTree(Root);
   return 0;
 }
