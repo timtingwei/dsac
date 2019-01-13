@@ -93,7 +93,7 @@ int Judge(Tree T, int N) {
     scanf("%d", &v);
     if ((!flag) && (!check(T, v))) flag = 1;
   }
-  if (flag) {
+  if (!flag) {
     return 1;
   } else {
     return 0;
