@@ -62,6 +62,7 @@ Tree BuildTree(int N) {
     scanf("%d", &v);
     Insert(v, T);
   }
+  return T;
 }
 
 int check(Tree T, int v) {
@@ -114,7 +115,7 @@ void FreeTree(Tree T) {
 }
 
 int main() {
-  int N, M, v;
+  int i, N, M, v;
   Tree T;
 
   for (;;) {
