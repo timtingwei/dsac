@@ -86,16 +86,16 @@ int check(Tree T, int v) {
 /* 一棵树和一个序列进行判断 */
 int Judge(Tree T, int N) {
   int i, v, flag;
-  flag = 0;
+  flag = 0;   /* 完全一致flag=0 */
 
   for (i = 0; i < N; i++) {
     scanf("%d", &v);
-    if (!check(T, v)) flag = 1;
+    if ((!flag) && (!check(T, v))) flag = 1;
   }
   if (flag) {
-    return 0;
-  } else {
     return 1;
+  } else {
+    return 0;
   }
 }
 
