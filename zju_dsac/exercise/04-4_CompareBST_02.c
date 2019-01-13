@@ -101,8 +101,8 @@ int Judge(Tree T, int N) {
 
 /* 把T中的标记清空 */
 void ResetT(Tree T) {
-  if (T->Left) Reset(T->Left);
-  if (T->Right) Reset(T->Right);
+  if (T->Left) ResetT(T->Left);
+  if (T->Right) ResetT(T->Right);
   T->flag = 0;
 }
 
