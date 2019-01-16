@@ -2,6 +2,34 @@
 /* 04-5_Root-of-AVL-Tree.c */
 /* 平衡二叉树的旋转 */
 
+/*
+Sample Input 1:
+5
+88 70 61 96 120
+Sample Output 1:
+70
+
+
+Sample Input 2:
+7
+88 70 61 96 120 90 65
+
+Sample Output 2:
+88
+*/
+#include <stdlib.h>
+#include <stdio.h>
+int main() {
+  int N, in;
+  AVLTree T;
+  scanf("%d", &N);
+  while (N--) {
+    scanf("%d", &in);
+    T = Insert(T, in);
+  }
+  printf("%d\n", T->Data);
+  return 0;
+}
 
 /* 平衡二叉树的存储 */
 #define ElementType int
