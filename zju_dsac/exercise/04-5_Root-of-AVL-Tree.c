@@ -19,28 +19,19 @@ Sample Output 2:
 */
 #include <stdlib.h>
 #include <stdio.h>
-int main() {
-  int N, in;
-  AVLTree T;
-  scanf("%d", &N);
-  while (N--) {
-    scanf("%d", &in);
-    T = Insert(T, in);
-  }
-  printf("%d\n", T->Data);
-  return 0;
-}
+
 
 /* 平衡二叉树的存储 */
 #define ElementType int
 typedef struct AVLNode *PtrToAVLNode;
+typedef PtrToAVLNode AVLTree;
 struct AVLNode {
   ElementType Data;
   AVLTree Left;
   AVLTree Right;
   int Height;      /* 树高 */
 };
-typedef struct PtrToAVLNode AVLTree;
+
 
 /* 取较大者 */
 int Max(int a, int b) {
@@ -69,7 +60,7 @@ AVLTree SingleLeftRotation(AVLTree A) {
   A->Left = B->Right;   /* B的右结点比b大比a小 */
   B->Right = A;
   A->Height = Max(GetHeight(A->Left), GetHeight(A->Right)) + 1;
-  B->Height = Max(GetHeight(B->Left), GetHeight(B->Right)) + 1;
+  B->Height = Max(GetHeight(B->Left), A->Height) + 1;
   return B;   /* B成为新的根结点 */
 }
 
@@ -82,7 +73,7 @@ AVLTree SingleRightRotation(AVLTree A) {
   A->Right = B->Left;
   B->Left = A;
   A->Height = Max(GetHeight(A->Left), GetHeight(A->Right)) + 1;
-  B->Height = Max(GetHeight(B->Left), GetHeight(B->Right)) + 1;
+  B->Height = Max(A->Height, GetHeight(B->Right)) + 1;
   return B;   /* B成为新的根结点 */
 }
 
@@ -90,22 +81,21 @@ AVLTree SingleRightRotation(AVLTree A) {
 AVLTree DoubleLeftRightRotation(AVLTree A) {
   /* A必须有左孩子B, B有右孩子C */
 
-  T->Left = SingleLeftRotation(A->Left);    /* 左子树先左旋转 */
-  return SingleRightRotation(A);            /* 根结点再右转 */
+  A->Left = SingleRightRotation(A->Left);    /* 左子树先右旋!!! */
+  return SingleLeftRotation(A);            /* 根结点再左旋!!! */
 }
 
 /* 右左双旋 */
 AVLTree DoubleRightLeftRotation(AVLTree A) {
   /* A必须有右孩子B, B有左孩子C */
-
-  T->Right = SingleRightRotation(A->Right);    /* 右子树先右旋转 */
-  return SingleLeftRotation(A);                /* 根结点再左转 */
+  A->Right = SingleLeftRotation(A->Right);      /* 右子树先左旋转 */
+  return SingleRightRotation(A);                /* 根结点再右转 */
 }
 
 
 
 /* 递归插入操作 */
-AVLTree Insert(AVLTree T, ELementType X) {
+AVLTree Insert(AVLTree T, ElementType X) {
   if (!T) {
     /* 树空 */
     T = (AVLTree)malloc(sizeof(struct AVLNode));
@@ -125,6 +115,7 @@ AVLTree Insert(AVLTree T, ELementType X) {
     }
   } else if (X > T->Data) {
     /* 插入右子树 */
+    T->Right = Insert(T->Right, X);     /* 别忘记插入右子树 */
     if (GetHeight(T->Right) - GetHeight(T->Left) == 2) {
       if (X > T->Right->Data) {
         T = SingleRightRotation(T);    /* 右单旋 */
@@ -138,4 +129,16 @@ AVLTree Insert(AVLTree T, ELementType X) {
   /* 更新树高 */
   T->Height = Max(GetHeight(T->Left), GetHeight(T->Right)) + 1;
   return T;
+}
+
+int main() {
+  int N, in;
+  AVLTree T;
+  scanf("%d", &N);
+  while (N--) {
+    scanf("%d", &in);
+    T = Insert(T, in);
+  }
+  printf("%d\n", T->Data);
+  return 0;
 }
