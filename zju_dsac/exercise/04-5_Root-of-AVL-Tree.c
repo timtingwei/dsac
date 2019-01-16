@@ -3,6 +3,17 @@
 /* 平衡二叉树的旋转 */
 
 
+/* 平衡二叉树的存储 */
+#define ElementType int
+typedef struct AVLTNode *PtrToAVLTNode;
+struct AVLTNode {
+  ElementType Data;
+  AVLTree Left;
+  AVLTree Right;
+  int Height;      /* 树高 */
+};
+typedef struct PtrToAVLTNode AVLTree;
+
 /* 求树的高度 */
 int GetHeight(AVLTree T) {
   int HL, HR, MaxH;
