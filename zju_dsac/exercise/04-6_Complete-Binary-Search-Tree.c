@@ -23,7 +23,7 @@ int GetLeftTreeLength(int n) {
   H = (int)log2(n+1);
   X = n-pow(2, H)+1;
   X = (X < pow(2, H-1)) ? X : pow(2, H-1);
-  L = pow(2, H-1)+1-X;
+  L = pow(2, H-1)-1+X;    /* 求左子树的结点的公式, H是上一层-1 */
   return L;
 }
 
