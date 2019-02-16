@@ -2,11 +2,30 @@
 /* 06-1_ListComponents.c */
 /* 列出连通集, DFS和BFS基础训练*/
 
+/*
+输入样例:
+8 6
+0 7
+0 1
+2 0
+4 1
+2 4
+3 5
+
+输出样例:
+{ 0 1 4 2 7 }
+{ 3 5 }
+{ 6 }
+{ 0 1 2 7 4 }
+{ 3 5 }
+{ 6 }
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
 #define MaxSize_Q 110
-typedef QNode *PtrToQNode;
+typedef struct QNode *PtrToQNode;
 typedef PtrToQNode Queue;
 struct QNode {
   int Elements[MaxSize_Q];
@@ -114,11 +133,10 @@ int main() {
   scanf("%d %d\n", &N, &E);
   BuildG();
   for (i = 0; i < E; i++) {
-    scanf("%d %d\n", &V1, &V2);
+    scanf("%d %d", &V1, &V2);    /* ??? scanf是否需要换行 */
     G[V1][V2] = 1;
     G[V2][V1] = 1;
   }
-
   ListComponents_DFS();
   ListComponents_BFS();
   return 0;
