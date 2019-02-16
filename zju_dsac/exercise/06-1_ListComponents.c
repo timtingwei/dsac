@@ -106,11 +106,11 @@ void BFS(int V) {
   AddQ(Q, V);
   while (!IsEmpty(Q)) {
     temp_V = DeleteQ(Q);
-    Visit(temp_V);
-    visited[temp_V] = 1;
-    for (i = 0; i < N; i++) {
-      if (G[temp_V][i] && !visited[i]) {
-        AddQ(Q, i);
+    if (!visited[temp_V]) {
+      Visit(temp_V);
+      visited[temp_V] = 1;
+      for (i = 0; i < N; i++) {
+        if (G[temp_V][i]) AddQ(Q, i);
       }
     }
   }
