@@ -30,6 +30,13 @@ void ReadGraph() {
 }
 
 int root[MaxSize];
+int GetRoot(int V) {
+  while (root[V] >= 0) {
+    V = root[V];
+  }
+  return V;
+}
+
 int IsLinked() {
   /* 判断是否为连通图 */
   int v, w, cnt, Root1, Root2;
@@ -68,7 +75,7 @@ void ResetDistAndPathAndCollected(int s) {
     collected[i] = 0;
   }
   dist[s] = 0;
-  collection[s] = 1;
+  collected[s] = 1;
   for (w = 1; w <= N; w++) {
     if (G[s][w] != -1) {
       dist[w] = G[s][w];
