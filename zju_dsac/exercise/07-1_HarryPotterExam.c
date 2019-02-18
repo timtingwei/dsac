@@ -2,12 +2,13 @@
 /* 07-1_HarryPotterExam.c */
 /* 哈利波特的考试 有权图的多源最短路径 */
 
+/* 最难变的动物所需要的咒语最短 */
 
 #include <stdio.h>
 #define MaxSize 110
 #define INFINITY 233333
 int N, E;
-int rst, max_dist;   /* 带去的动物和最长变形魔咒 */
+int rst_v, min_LongestDist;   /* 带去的动物和最短的最难变形魔咒 */
 int G[MaxSize][MaxSize];
 int dist[MaxSize];
 int path[MaxSize];
@@ -118,35 +119,32 @@ void Dijkstra(int S) {
 
 void FindPathShortest() {
   int i, s;
-  int min_length, temp_length, temp_max_dist;
-  min_length = INFINITY;
+  int temp_max_dist;
+  min_LongestDist = INFINITY;
   for (s = 1; s <= N; s++) {
-    temp_length = 0;
     temp_max_dist = 0;
     ResetDistAndPathAndCollected(s);
     Dijkstra(s);
 
     for (i = 1; i <= N; i++) {
-      temp_length += dist[i];
       if (dist[i] > temp_max_dist) temp_max_dist = dist[i];
     }
-    if (temp_length < min_length) {    /* 找出单源距离最小, 修改全局变量 */
-      min_length = temp_length;
-      rst = s;
-      max_dist = temp_max_dist;
+    if (temp_max_dist < min_LongestDist) {  /* 找出最难变动物咒语最短 */
+      rst_v = s;
+      min_LongestDist = temp_max_dist;
     }
+    /* 错误理解: 找出单源距离和最小, 修改全局变量 */
   }
 }
 
 int main() {
   scanf("%d %d", &N, &E);
-  int i, rst;
   ReadGraph();
   if (!IsLinked()) {
     printf("0\n");
   } else {
     FindPathShortest();
-    printf("%d %d\n", rst, max_dist);
+    printf("%d %d\n", rst_v, min_LongestDist);
   }
   return 0;
 }
