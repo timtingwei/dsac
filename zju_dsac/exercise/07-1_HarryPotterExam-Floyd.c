@@ -1,9 +1,26 @@
-
 /* Copyright [2019] <mituh> */
 /* 07-1_HarryPotterExam-Floyd.c */
 /* 哈利波特的考试 有权图的多源最短路径 */
 
 /* 建图和调用Floyd算法 */
+
+/*
+输入样例:
+6 11
+3 4 70
+1 2 1
+5 4 50
+2 6 50
+5 6 60
+1 3 70
+4 6 60
+3 6 80
+5 1 100
+2 4 60
+5 2 80
+输出样例:
+4 70
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,7 +32,7 @@
 
 
 typedef struct GNode *PtrToGNode;
-typedef PtrToGNode *MGraph;
+typedef PtrToGNode MGraph;
 struct GNode {
   int Nv;
   int Ne;
@@ -54,7 +71,7 @@ MGraph BuildGraph() {
   int i, Nv;
 
   scanf("%d", &Nv);
-  CreateGraph(Nv);
+  Graph = CreateGraph(Nv);     /* CreateGraph 要用一个变量来承接返回值!! */
   scanf("%d", &(Graph->Ne));
   if (Graph->Ne != 0) {
     for (i = 0; i < Graph->Ne; i++) {
@@ -123,7 +140,7 @@ void FindAnimal(MGraph Graph) {
 
 int main() {
   MGraph Graph;
-  Graph = BuildGraph(Graph);
+  Graph = BuildGraph();
   FindAnimal(Graph);
   return 0;
 }
