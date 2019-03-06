@@ -39,7 +39,7 @@ void MSort(ElementType A[], ElementType TmpA[], int L, int RightEnd) {
 
 /* 统一接口 */
 void Merge_Sort(ElementType A[], int N) {
-  ElementType TmpA;
+  ElementType *TmpA;
   TmpA = malloc(sizeof(ElementType) * N);
   if (TmpA != NULL) {
     MSort(A, TmpA, 0, N-1);
@@ -47,4 +47,16 @@ void Merge_Sort(ElementType A[], int N) {
   } else {
     printf("Error, 空间不足\n");
   }
+}
+
+int main() {
+  ElementType A[] = {9, 8, 7, 6, 5, 4, 3};
+  int N, i;
+  N = 7;
+  Merge_Sort(A, N);
+  for (i = 0; i < N; i++) {
+    printf("%d ", A[i]);
+  }
+  printf("\n");
+  return 0;
 }
