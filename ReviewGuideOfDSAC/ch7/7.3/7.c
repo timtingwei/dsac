@@ -7,9 +7,36 @@
 #include <stdio.h>
 typedef enum {RED, WHITE, BLUE} color;   /* enum枚举数组 */
 
+void Swap(color *a, color *b) {
+  color temp;
+  temp = *a; *a = *b; *b = temp;
+}
+
+void Flag_Arrange(color A[], int N) {
+  int i, j, k;
+  i = 0; j = 0; k = N-1;
+  while (j <= k) {
+    switch (A[j]) {
+      case RED: Swap(&A[i], &A[j]); i++; j++; break;
+      case WHITE: j++; break;
+      case BLUE: Swap(&A[j], &A[k]); k--; break;
+    }
+  }
+}
+
+/* test case */
 int main() {
-  color r;
-  r = RED;
-  printf("RED = %d, r = %d\n", RED, r);
+  color cls[] = {RED, BLUE, WHITE, RED, RED, BLUE, BLUE, WHITE};
+  int i, N;
+  N = 8;
+  Flag_Arrange(cls, N);
+  for (i = 0; i < N; i++) {
+    switch (cls[i]) {
+      case RED: printf("RED "); break;
+      case WHITE: printf("WHITE "); break;
+      case BLUE: printf("BLUE "); break;
+    }
+  }
+  printf("\n");
   return 0;
 }
