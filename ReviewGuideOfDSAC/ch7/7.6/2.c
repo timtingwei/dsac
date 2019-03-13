@@ -16,4 +16,16 @@ void merge(ElementType A[], int m, int n) {
   while (i <= m) A[k++] = B[i++];     /* 处理剩下的前半段 */
   while (j <= m+n) A[k++] = B[j++];   /* 处理剩下的后半段 */
 }
-o
+
+/* 插入的版本 */
+/* T(n) = O(mn), S(n) = O(1) */
+void Insert_Sort(ElementType A[], int m, int n) {
+  int i, j;
+  for (i = m+1; i <= m+n; i++) {        /* 依次将A[m+1...m+n]插入到有序表中 */
+    A[0] = A[i];                        /* 复制哨兵 */
+    for (j = i-1; A[j] > A[0]; j--) {   /* 从后往前插入 */
+      A[j+1] = A[j];                    /* 元素后移 */
+    }
+    A[j+1] = A[0];                      /* 插入 */
+  }
+}
