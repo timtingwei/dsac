@@ -12,7 +12,7 @@ int GetHeight(BinTree T) {
   BinTree p;
   front = -1; rear = -1;
   last = 0; level = 0;   /* last指向下一层最后一个结点 */
-  BinTree[MaxSize] Q;    /* 队列用数组构造!! */
+  BinTree Q[MaxSize];    /* 队列用数组构造!! */
   Q[++rear] = T;         /* 根结点入队 */
   while (front < rear) {   /* 队列非空 */
     p = Q[++front];        /* 神奇的出队操作.. */
