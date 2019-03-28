@@ -15,13 +15,25 @@ typedef struct FNode {
 } FNode, *Forest;
 
 /* 计算一棵树上的叶子的数量 */
+/*
 int GetTreeLeaves(CSTree T) {
-  if (T == NULL) return 0;    /* 空树 */
+  if (T == NULL) return 0;    // 空树
   if (T->firstchild == NULL && T->nextsibling == NULL) {
     return 1;
   }
-  /* 递归: 一棵树总的叶结点, 左子树 + 右子树叶结点 */
+  // 递归: 一棵树总的叶结点, 左子树 + 右子树叶结点
   return GetTreeLeaves(T->firstchild) + GetTreeLeaves(T->nextsibling);
+}
+*/
+
+/* 孩子-兄弟存储, 没有左孩子, 就没有叶结点 */
+int GetTreeLeaves(CSTree T) {
+  if (T == NULL) return 0;   /* 空树 */
+  if (T->firstchild == NULL) {   /* 第一个孩子是叶节点 */
+    return 1 + GetTreeLeaves(T->nextsibling);
+  } else {
+    return GetTreeLeaves(firstchild) + GetTreeLeaves(nextsibling);
+  }
 }
 
 int CountForestLeaves(Forest F) {
