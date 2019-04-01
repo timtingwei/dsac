@@ -2,9 +2,13 @@
 /* 4.5/10.c */
 /* 从大到小输出二叉排序树中值不小于k的关键字 */
 
+
+
+/* 解法一: */
+
 #include <stdio.h>
 /* 非递归中序遍历, 将不小于k的值入栈, 再统一逆序输出 */
-void PrintMoreThanK(BiTree T, int k) {
+void OutPut(BiTree T, int k) {
   Stack KS, InS;     /* 一个存不小于k的栈, 一个存中序遍历结点的栈 */
   BiTree p;
   p = T;       /* 中序不要临时结点r, 与后序不同 */
@@ -32,5 +36,21 @@ void PrintMoreThanK(BiTree T, int k) {
   while (!IsEmpty(KS)) {
     pop(KS, v);
     printf("%d\n", v);       /* 输出元素 */
+  }
+}
+
+
+/* 解法二: */
+/* 先遍历右子树, 再遍历左子树(把中序遍历的左右顺序反一反, 不用额外开栈) */
+void OutPut(BiTree T, KeyType k) {    /* 注意关键字类型别写错 */
+  if (T == NULL) return;              /* 树空 */
+  if (T->rchild != NULL) {
+    OutPut(T->rchild, k);             /* 递归输出右子树结点 */
+  }
+  if (T->data >= k) {
+    printf("%d ", T->data);           /* 只输出大于等于k的值 */
+  }
+  if (T->lchild != NULL) {
+    OutPut(T->lchild, k);             /* 递归输出左子树结点 */
   }
 }
