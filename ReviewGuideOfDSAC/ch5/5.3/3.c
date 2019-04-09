@@ -26,5 +26,6 @@ void dfs(LGraph G, int v) {
     if (!exist) {    /* 若v结点不存在未访问 */
       pop(S, v);
     }
+    
   }
 }
