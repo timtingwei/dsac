@@ -43,3 +43,6 @@ int Judge(LGraph G, int vi, int vj) {
   /* bfs(G, vi, vj, &ans); */
   return ans;
 }
+
+
+// Update
