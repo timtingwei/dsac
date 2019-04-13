@@ -19,3 +19,5 @@ void FindPath(LGraph* G, int u, int v, int d, int path[]) {
   }
   visited[u] = 0;                   // 恢复环境, 使结点重新适用
 }
+
+// Update
